@@ -50,7 +50,7 @@ const DiversityDashboard: React.FC = () => {
 
         const femaleCount = PLACED_STUDENTS.filter(s => s.gender === 'Female').length;
         const ruralCount = PLACED_STUDENTS.filter(s => s.background === 'Rural').length;
-        
+
         const tierCounts = PLACED_STUDENTS.reduce((acc, student) => {
             acc[student.collegeTier] = (acc[student.collegeTier] || 0) + 1;
             return acc;
@@ -78,13 +78,13 @@ const DiversityDashboard: React.FC = () => {
             </Card>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <StatCard 
+                <StatCard
                     icon={<UserIcon className="h-6 w-6 text-brand-700 dark:text-brand-300" />}
                     title="Women Placed"
                     value={`${stats.femalePercentage.toFixed(1)}%`}
                     description={`Out of ${stats.total} total placements`}
                 />
-                <StatCard 
+                <StatCard
                     icon={<GlobeAmericasIcon className="h-6 w-6 text-brand-700 dark:text-brand-300" />}
                     title="Rural Students Placed"
                     value={`${stats.ruralPercentage.toFixed(1)}%`}

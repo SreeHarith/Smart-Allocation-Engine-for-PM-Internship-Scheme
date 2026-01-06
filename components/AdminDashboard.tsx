@@ -4,12 +4,12 @@ import { Admin } from '../types';
 import DiversityDashboard from './DiversityDashboard';
 
 interface AdminDashboardProps {
-    admin: Admin;
-    activeView: string;
+  admin: Admin;
+  activeView: string;
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ admin, activeView }) => {
-    
+
   const renderContent = () => {
     switch (activeView) {
       case 'dashboard':
@@ -32,11 +32,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ admin, activeView }) =>
         return <p>Select an option from the sidebar.</p>;
     }
   };
-    
+
   return (
     <div className="p-4 sm:p-6 lg:p-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Admin Portal</h1>
-        {renderContent()}
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Admin Portal</h1>
+      {renderContent()}
     </div>
   );
 };

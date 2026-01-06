@@ -3,6 +3,8 @@ import { User, Notification, Admin, Company, Student } from "./types";
 import NotificationToast from "./components/NotificationToast";
 import { generatePersonalizedNotification } from "./services/aiService";
 import HomePage from "./components/HomePage";
+import LoginPage from "./components/auth/LoginPage";
+import SignupPage from "./components/auth/SignupPage";
 import SidebarLayout from "./components/layout/SidebarLayout";
 import {
   ADMIN_DATA,
@@ -15,7 +17,24 @@ import { calculateMatchScore } from "./services/matchingService";
 
 const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentView, setCurrentView] = useState<'HOME' | 'LOGIN' | 'SIGNUP'>('HOME');
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  // --- Persistence ---
+  useEffect(() => {
+    const savedUser = localStorage.getItem('pm_internship_user');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('pm_internship_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('pm_internship_user');
+    }
+  }, [currentUser]);
 
   // --- Notification Management ---
   const addNotification = (
@@ -139,17 +158,17 @@ const App: React.FC = () => {
         setCurrentUser(ADMIN_DATA);
         break;
     }
+    setCurrentView('HOME'); // Not strictly needed as layout will take over
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
+    setCurrentView('HOME');
   };
 
-  return (
-    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-      {!currentUser ? (
-        <HomePage onLogin={handleLogin} />
-      ) : (
+  const renderContent = () => {
+    if (currentUser) {
+      return (
         <SidebarLayout
           user={currentUser}
           onLogout={handleLogout}
@@ -161,10 +180,37 @@ const App: React.FC = () => {
         >
           {/* Main content is now handled within SidebarLayout based on user role */}
         </SidebarLayout>
-      )}
+      );
+    }
+
+    switch (currentView) {
+      case 'LOGIN':
+        return (
+          <LoginPage
+            onLogin={handleLogin}
+            onSwitchToSignup={() => setCurrentView('SIGNUP')}
+            onBackToHome={() => setCurrentView('HOME')}
+          />
+        );
+      case 'SIGNUP':
+        return (
+          <SignupPage
+            onSignup={handleLogin}
+            onSwitchToLogin={() => setCurrentView('LOGIN')}
+            onBackToHome={() => setCurrentView('HOME')}
+          />
+        );
+      default:
+        return <HomePage onLogin={() => setCurrentView('LOGIN')} />;
+    }
+  };
+
+  return (
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      {renderContent()}
 
       {/* Notification container */}
-      <div className="fixed top-20 right-5 z-50 space-y-3">
+      <div className="fixed top-24 right-5 z-50 space-y-4 w-full max-w-[350px] pointer-events-none">
         {notifications
           .filter((n) => !n.read)
           .slice(0, 3)

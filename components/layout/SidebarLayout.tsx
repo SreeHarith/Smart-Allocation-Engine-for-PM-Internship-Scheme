@@ -28,6 +28,9 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
 }) => {
     const [activeView, setActiveView] = useState('dashboard');
     const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+    const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
 
     const handleBellClick = () => {
         setIsNotificationPanelOpen(prev => !prev);
@@ -35,14 +38,14 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
             markAllAsRead();
         }
     };
-    
+
     const renderDashboard = () => {
         switch (user.role) {
             case 'STUDENT':
                 return (
-                    <StudentDashboard 
-                        student={user as Student} 
-                        addNotification={addNotification} 
+                    <StudentDashboard
+                        student={user as Student}
+                        addNotification={addNotification}
                         activeView={activeView}
                         onUpdateStudent={(updatedStudent) => onUpdateUser(updatedStudent)}
                     />
@@ -57,14 +60,20 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
     };
 
     return (
-        <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-            <Sidebar userRole={user.role} activeView={activeView} setActiveView={setActiveView} />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <Header 
-                    userName={user.name} 
+        <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
+            <Sidebar
+                userRole={user.role}
+                activeView={activeView}
+                setActiveView={setActiveView}
+                isCollapsed={isSidebarCollapsed}
+                onToggle={toggleSidebar}
+            />
+            <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out`}>
+                <Header
+                    userName={user.name}
                     onLogout={onLogout}
                     notifications={notifications}
-                    onBellClick={handleBellClick} 
+                    onBellClick={handleBellClick}
                 />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-800 relative">
                     {renderDashboard()}

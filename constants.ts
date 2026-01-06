@@ -3,10 +3,10 @@ import { Student, Company, Admin, Internship, Course, InterviewQuestion } from '
 
 export const STUDENT_DATA: Student = {
   id: 1,
-  name: 'Aisha Sharma',
-  email: 'aisha.sharma@example.com',
+  name: 'DHARSHAN P',
+  email: 'dharshan@example.com',
   role: 'STUDENT',
-  profileImage: `https://i.pravatar.cc/150?u=aisha`,
+  profileImage: `https://i.pravatar.cc/150?u=dharshan`,
   careerGoals: 'Become a Product Manager in a tech company',
   skills: ['React', 'Node.js', 'Market Research', 'Agile Methodologies', 'Figma'],
   qualifications: ['B.Tech in Computer Science', 'Certified Scrum Master'],
@@ -20,17 +20,17 @@ export const STUDENT_DATA: Student = {
 };
 
 export const COMPANY_DATA: Company = {
-    id: 101,
-    name: 'InnovateAI Corp',
-    email: 'hr@innovateai.com',
-    role: 'COMPANY',
+  id: 101,
+  name: 'InnovateAI Corp',
+  email: 'hr@innovateai.com',
+  role: 'COMPANY',
 };
 
 export const ADMIN_DATA: Admin = {
-    id: 999,
-    name: 'Platform Admin',
-    email: 'admin@platform.gov.in',
-    role: 'ADMIN',
+  id: 999,
+  name: 'Platform Admin',
+  email: 'admin@platform.gov.in',
+  role: 'ADMIN',
 };
 
 export const INTERNSHIPS: Internship[] = [
@@ -165,89 +165,96 @@ export const NEW_INTERNSHIP_FOR_SIMULATION: Internship = {
 };
 
 export const COURSES: Course[] = [
-    {
-        id: 1,
-        title: 'Introduction to Data Analysis with Python',
-        provider: 'Coursera',
-        coversSkills: ['Data Analysis', 'Python'],
-    },
-    {
-        id: 2,
-        title: 'Advanced SQL for Data Scientists',
-        provider: 'Udemy',
-        coversSkills: ['SQL'],
-    },
-    {
-        id: 3,
-        title: 'Product Roadmapping Fundamentals',
-        provider: 'LinkedIn Learning',
-        coversSkills: ['Product Roadmapping'],
-    },
-    {
-        id: 4,
-        title: 'Machine Learning A-Z',
-        provider: 'Udemy',
-        coversSkills: ['Machine Learning'],
-    },
-    {
-        id: 5,
-        title: 'Advanced React and TypeScript',
-        provider: 'Frontend Masters',
-        coversSkills: ['React', 'TypeScript'],
-    },
+  {
+    id: 1,
+    title: 'Introduction to Data Analysis with Python',
+    provider: 'Coursera',
+    coversSkills: ['Data Analysis', 'Python'],
+  },
+  {
+    id: 2,
+    title: 'Advanced SQL for Data Scientists',
+    provider: 'Udemy',
+    coversSkills: ['SQL'],
+  },
+  {
+    id: 3,
+    title: 'Product Roadmapping Fundamentals',
+    provider: 'LinkedIn Learning',
+    coversSkills: ['Product Roadmapping'],
+  },
+  {
+    id: 4,
+    title: 'Machine Learning A-Z',
+    provider: 'Udemy',
+    coversSkills: ['Machine Learning'],
+  },
+  {
+    id: 5,
+    title: 'Advanced React and TypeScript',
+    provider: 'Frontend Masters',
+    coversSkills: ['React', 'TypeScript'],
+  },
 ];
 
 export const ALL_STUDENTS: Student[] = [
-    STUDENT_DATA, // Aisha Sharma
-    {
-      id: 2, name: 'Rohan Verma', email: 'rohan.v@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=rohan`, careerGoals: 'AI/ML Engineer',
-      skills: ['Python', 'Machine Learning', 'Data Analysis', 'SQL'], qualifications: ['B.E. in IT'], locationPreference: 'Bangalore',
-      preferredCompanySize: 'Any', industryFocus: ['Artificial Intelligence'], preferredDuration: '6 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1',
-    },
-    {
-      id: 3, name: 'Priya Singh', email: 'priya.s@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=priya`, careerGoals: 'Data Scientist',
-      skills: ['Python', 'SQL', 'Data Analysis', 'Agile Methodologies'], qualifications: ['B.Sc. in Statistics'], locationPreference: 'Hyderabad',
-      preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Female', background: 'Rural', collegeTier: 'Tier-2',
-    },
-    {
-      id: 4, name: 'Amit Kumar', email: 'amit.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=amit`, careerGoals: 'Full Stack Developer',
-      skills: ['React', 'Node.js', 'MongoDB', 'REST APIs'], qualifications: ['B.Tech in CSE'], locationPreference: 'Remote',
-      preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3',
-    },
-    {
-      id: 5, name: 'Sunita Devi', email: 'sunita.d@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sunita`, careerGoals: 'Product Manager',
-      skills: ['Market Research', 'Agile Methodologies', 'Figma'], qualifications: ['MBA'], locationPreference: 'Bangalore',
-      preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2',
-    },
-    // Add 15 more diverse students
-    { id: 6, name: 'Karan Malhotra', email: 'karan.m@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=karan`, careerGoals: 'Backend Developer', skills: ['Node.js', 'Express.js', 'MongoDB'], qualifications: ['B.E.'], locationPreference: 'Bangalore', preferredCompanySize: 'Startup', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
-    { id: 7, name: 'Anjali Rao', email: 'anjali.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=anjali`, careerGoals: 'UI/UX Designer', skills: ['Figma', 'React'], qualifications: ['Design Diploma'], locationPreference: 'Remote', preferredCompanySize: 'Any', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
-    // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
-    { id: 8, name: 'Vikram Singh', email: 'vikram.s@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=vikram`, careerGoals: 'Data Analyst', skills: ['SQL', 'Data Analysis', 'Python'], qualifications: ['B.Com'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
-    { id: 9, name: 'Sneha Patel', email: 'sneha.p@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sneha`, careerGoals: 'Frontend Developer', skills: ['React', 'CSS', 'TypeScript'], qualifications: ['B.Tech'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
-    { id: 10, name: 'Rajesh Gupta', email: 'rajesh.g@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=rajesh`, careerGoals: 'AI Engineer', skills: ['Machine Learning', 'Python'], qualifications: ['M.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
-    { id: 11, name: 'Deepika Nair', email: 'deepika.n@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=deepika`, careerGoals: 'Product Manager', skills: ['Market Research', 'Product Roadmapping'], qualifications: ['MBA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Rural', collegeTier: 'Tier-3' },
-    // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
-    { id: 12, name: 'Arjun Reddy', email: 'arjun.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=arjun`, careerGoals: 'Data Scientist', skills: ['Python', 'Machine Learning', 'SQL'], qualifications: ['B.E.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
-    { id: 13, name: 'Meera Desai', email: 'meera.d@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=meera`, careerGoals: 'Frontend Developer', skills: ['React', 'TypeScript'], qualifications: ['BCA'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Rural', collegeTier: 'Tier-3' },
-    { id: 14, name: 'Sanjay Joshi', email: 'sanjay.j@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sanjay`, careerGoals: 'Backend Developer', skills: ['Node.js', 'MongoDB'], qualifications: ['MCA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-2' },
-    { id: 15, name: 'Fatima Khan', email: 'fatima.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=fatima`, careerGoals: 'AI PM', skills: ['Market Research', 'Agile Methodologies', 'Data Analysis'], qualifications: ['B.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-1' },
-    // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
-    { id: 16, name: 'Naveen Kumar', email: 'naveen.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=naveen`, careerGoals: 'Data Scientist', skills: ['Data Analysis', 'SQL'], qualifications: ['B.Sc.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
-    { id: 17, name: 'Pooja Reddy', email: 'pooja.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=pooja`, careerGoals: 'React Developer', skills: ['React', 'REST APIs'], qualifications: ['B.E.'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
-    { id: 18, name: 'Alok Nath', email: 'alok.n@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=alok`, careerGoals: 'Backend Engineer', skills: ['Node.js', 'REST APIs'], qualifications: ['B.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Rural', collegeTier: 'Tier-2' },
-    { id: 19, name: 'Lakshmi Iyer', email: 'lakshmi.i@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=lakshmi`, careerGoals: 'Product Manager', skills: ['Market Research', 'Product Roadmapping', 'Data Analysis'], qualifications: ['MBA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-1' },
-    // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
-    { id: 20, name: 'Harish Mehta', email: 'harish.m@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=harish`, careerGoals: 'Data Analyst', skills: ['SQL', 'Python'], qualifications: ['B.Sc.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
+  STUDENT_DATA, // DHARSHAN P
+  {
+    id: 2, name: 'Rohan Verma', email: 'rohan.v@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=rohan`, careerGoals: 'AI/ML Engineer',
+    skills: ['Python', 'Machine Learning', 'Data Analysis', 'SQL'], qualifications: ['B.E. in IT'], locationPreference: 'Bangalore',
+    preferredCompanySize: 'Any', industryFocus: ['Artificial Intelligence'], preferredDuration: '6 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1',
+  },
+  {
+    id: 3, name: 'Priya Singh', email: 'priya.s@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=priya`, careerGoals: 'Data Scientist',
+    skills: ['Python', 'SQL', 'Data Analysis', 'Agile Methodologies'], qualifications: ['B.Sc. in Statistics'], locationPreference: 'Hyderabad',
+    preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Female', background: 'Rural', collegeTier: 'Tier-2',
+  },
+  {
+    id: 4, name: 'Amit Kumar', email: 'amit.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=amit`, careerGoals: 'Full Stack Developer',
+    skills: ['React', 'Node.js', 'MongoDB', 'REST APIs'], qualifications: ['B.Tech in CSE'], locationPreference: 'Remote',
+    preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3',
+  },
+  {
+    id: 5, name: 'Sunita Devi', email: 'sunita.d@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sunita`, careerGoals: 'Product Manager',
+    skills: ['Market Research', 'Agile Methodologies', 'Figma'], qualifications: ['MBA'], locationPreference: 'Bangalore',
+    preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2',
+  },
+  // Add 15 more diverse students
+  { id: 6, name: 'Karan Malhotra', email: 'karan.m@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=karan`, careerGoals: 'Backend Developer', skills: ['Node.js', 'Express.js', 'MongoDB'], qualifications: ['B.E.'], locationPreference: 'Bangalore', preferredCompanySize: 'Startup', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
+  { id: 7, name: 'Anjali Rao', email: 'anjali.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=anjali`, careerGoals: 'UI/UX Designer', skills: ['Figma', 'React'], qualifications: ['Design Diploma'], locationPreference: 'Remote', preferredCompanySize: 'Any', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
+  // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
+  { id: 8, name: 'Vikram Singh', email: 'vikram.s@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=vikram`, careerGoals: 'Data Analyst', skills: ['SQL', 'Data Analysis', 'Python'], qualifications: ['B.Com'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
+  { id: 9, name: 'Sneha Patel', email: 'sneha.p@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sneha`, careerGoals: 'Frontend Developer', skills: ['React', 'CSS', 'TypeScript'], qualifications: ['B.Tech'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
+  { id: 10, name: 'Rajesh Gupta', email: 'rajesh.g@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=rajesh`, careerGoals: 'AI Engineer', skills: ['Machine Learning', 'Python'], qualifications: ['M.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
+  { id: 11, name: 'Deepika Nair', email: 'deepika.n@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=deepika`, careerGoals: 'Product Manager', skills: ['Market Research', 'Product Roadmapping'], qualifications: ['MBA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Rural', collegeTier: 'Tier-3' },
+  // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
+  { id: 12, name: 'Arjun Reddy', email: 'arjun.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=arjun`, careerGoals: 'Data Scientist', skills: ['Python', 'Machine Learning', 'SQL'], qualifications: ['B.E.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Urban', collegeTier: 'Tier-1' },
+  { id: 13, name: 'Meera Desai', email: 'meera.d@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=meera`, careerGoals: 'Frontend Developer', skills: ['React', 'TypeScript'], qualifications: ['BCA'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Rural', collegeTier: 'Tier-3' },
+  { id: 14, name: 'Sanjay Joshi', email: 'sanjay.j@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=sanjay`, careerGoals: 'Backend Developer', skills: ['Node.js', 'MongoDB'], qualifications: ['MCA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Urban', collegeTier: 'Tier-2' },
+  { id: 15, name: 'Fatima Khan', email: 'fatima.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=fatima`, careerGoals: 'AI PM', skills: ['Market Research', 'Agile Methodologies', 'Data Analysis'], qualifications: ['B.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-1' },
+  // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
+  { id: 16, name: 'Naveen Kumar', email: 'naveen.k@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=naveen`, careerGoals: 'Data Scientist', skills: ['Data Analysis', 'SQL'], qualifications: ['B.Sc.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
+  { id: 17, name: 'Pooja Reddy', email: 'pooja.r@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=pooja`, careerGoals: 'React Developer', skills: ['React', 'REST APIs'], qualifications: ['B.E.'], locationPreference: 'Remote', preferredCompanySize: 'Startup', industryFocus: ['Web Development'], preferredDuration: '6 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-2' },
+  { id: 18, name: 'Alok Nath', email: 'alok.n@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=alok`, careerGoals: 'Backend Engineer', skills: ['Node.js', 'REST APIs'], qualifications: ['B.Tech'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Backend Development'], preferredDuration: '3 Months', gender: 'Male', background: 'Rural', collegeTier: 'Tier-2' },
+  { id: 19, name: 'Lakshmi Iyer', email: 'lakshmi.i@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=lakshmi`, careerGoals: 'Product Manager', skills: ['Market Research', 'Product Roadmapping', 'Data Analysis'], qualifications: ['MBA'], locationPreference: 'Bangalore', preferredCompanySize: 'Mid-size', industryFocus: ['Artificial Intelligence'], preferredDuration: '3 Months', gender: 'Female', background: 'Urban', collegeTier: 'Tier-1' },
+  // FIX: Changed preferredDuration from '4 Months' to 'Any' to match the allowed types in types.ts.
+  { id: 20, name: 'Harish Mehta', email: 'harish.m@example.com', role: 'STUDENT', profileImage: `https://i.pravatar.cc/150?u=harish`, careerGoals: 'Data Analyst', skills: ['SQL', 'Python'], qualifications: ['B.Sc.'], locationPreference: 'Hyderabad', preferredCompanySize: 'MNC', industryFocus: ['Data Science'], preferredDuration: 'Any', gender: 'Male', background: 'Rural', collegeTier: 'Tier-3' },
 ];
 
 // Mock data for placed students for the diversity dashboard
 export const PLACED_STUDENTS: Student[] = ALL_STUDENTS.slice(0, 15); // Taking first 15 students as "placed"
 
 export const MOCK_INTERVIEW_QUESTIONS: InterviewQuestion[] = [
-    { id: 1, text: "Tell me about yourself and why you're interested in product management." },
-    { id: 2, text: "Describe a product you love and what you would do to improve it." },
-    { id: 3, text: "How do you handle disagreements with team members, for example, an engineer who thinks a feature is too difficult to build?" },
-    { id: 4, text: "Walk me through how you would prioritize features for a new product." },
-    { id: 5, text: "What are your biggest strengths and weaknesses as a potential product manager?" }
+  { id: 1, text: "Tell me about yourself and why you're interested in product management." },
+  { id: 2, text: "Describe a product you love and what you would do to improve it." },
+  { id: 3, text: "How do you handle disagreements with team members, for example, an engineer who thinks a feature is too difficult to build?" },
+  { id: 4, text: "Walk me through how you would prioritize features for a new product." },
+  { id: 5, text: "What are your biggest strengths and weaknesses as a potential product manager?" }
 ];
+
+// --- Demo Credentials ---
+export const DEMO_CREDENTIALS = {
+  STUDENT: { email: 'dharshan@example.com', password: 'password123' },
+  COMPANY: { email: 'hr@innovateai.com', password: 'password123' },
+  ADMIN: { email: 'admin@platform.gov.in', password: 'password123' }
+};

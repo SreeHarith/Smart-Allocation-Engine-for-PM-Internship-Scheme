@@ -3,7 +3,7 @@ import { Student, Notification, Internship } from '../types';
 import { getTopMatches } from '../services/matchingService';
 import InternshipCard from './InternshipCard';
 import Button from './common/Button';
-import { ArrowPathIcon } from './common/Icons';
+import { ArrowPathIcon, BriefcaseIcon } from './common/Icons';
 import Spinner from './common/Spinner';
 import ConfirmationModal from './common/ConfirmationModal';
 
@@ -20,14 +20,7 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   const [internshipToWithdraw, setInternshipToWithdraw] = useState<Internship | null>(null);
 
   const topMatches = useMemo(() => {
-    const matches = getTopMatches(student, 6, dislikedIds);
-    // Simulate a dynamic refresh by shuffling the results.
-    // In a real app, this would be a new fetch.
-    for (let i = matches.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [matches[i], matches[j]] = [matches[j], matches[i]];
-    }
-    return matches;
+    return getTopMatches(student, 6, dislikedIds);
   }, [student, dislikedIds, refreshKey]);
 
   const handleDislike = (internshipId: number) => {
@@ -60,59 +53,66 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-        setRefreshKey(prev => prev + 1);
-        setIsRefreshing(false);
+      setRefreshKey(prev => prev + 1);
+      setIsRefreshing(false);
     }, 1000); // Simulate network delay
   };
 
   return (
-    <div>
-        <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Your Top Recommendations</h2>
-            <Button onClick={handleRefresh} variant="light" size="sm" disabled={isRefreshing} className="min-w-[100px]">
-                {isRefreshing ? (
-                    <Spinner />
-                ) : (
-                    <>
-                        <ArrowPathIcon className="h-4 w-4" />
-                        <span className="ml-2">Refresh</span>
-                    </>
-                )}
-            </Button>
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Recommended for You</h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">Based on your skills and preferences</p>
         </div>
-        
-        {topMatches.length === 0 ? (
-            <div className="text-center py-10 px-4 bg-white dark:bg-gray-800 rounded-lg shadow-md col-span-1 md:col-span-2 lg:col-span-3">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200">No More Recommendations</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-2">
-                    You've reviewed all top matches for now. Check back later for new opportunities!
-                </p>
-            </div>
-        ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {topMatches.map(internship => (
-                    <InternshipCard 
-                        key={internship.id} 
-                        internship={internship} 
-                        student={student}
-                        onDislike={handleDislike}
-                        onApply={handleApply}
-                        onWithdraw={handleWithdraw}
-                        isApplied={appliedIds.includes(internship.id)}
-                    />
-                ))}
-            </div>
-        )}
+        <Button onClick={handleRefresh} variant="light" size="md" disabled={isRefreshing} className="!rounded-2xl border-gray-100">
+          {isRefreshing ? (
+            <Spinner />
+          ) : (
+            <>
+              <ArrowPathIcon className="h-4 w-4 text-brand-500" />
+              <span className="ml-2">Refresh Matches</span>
+            </>
+          )}
+        </Button>
+      </div>
 
-        <ConfirmationModal
-            isOpen={!!internshipToWithdraw}
-            onClose={() => setInternshipToWithdraw(null)}
-            onConfirm={handleConfirmWithdrawal}
-            title="Confirm Application Withdrawal"
-            message={`Are you sure you want to withdraw your application for "${internshipToWithdraw?.title}"? This action cannot be undone.`}
-            confirmText="Withdraw"
-            variant="danger"
-        />
+      {topMatches.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 px-8 bg-white dark:bg-gray-800 rounded-[3rem] shadow-premium border border-gray-100 dark:border-gray-700 text-center">
+          <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-500 mb-6">
+            <BriefcaseIcon className="h-10 w-10" />
+          </div>
+          <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">No More Recommendations</h3>
+          <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+            You've reviewed all top matches for now. We'll notify you when new opportunities that match your profile arrive!
+          </p>
+          <Button variant="light" className="mt-8" onClick={() => setDislikedIds([])}>Reset Preferences</Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {topMatches.map(internship => (
+            <InternshipCard
+              key={internship.id}
+              internship={internship}
+              student={student}
+              onDislike={handleDislike}
+              onApply={handleApply}
+              onWithdraw={handleWithdraw}
+              isApplied={appliedIds.includes(internship.id)}
+            />
+          ))}
+        </div>
+      )}
+
+      <ConfirmationModal
+        isOpen={!!internshipToWithdraw}
+        onClose={() => setInternshipToWithdraw(null)}
+        onConfirm={handleConfirmWithdrawal}
+        title="Confirm Application Withdrawal"
+        message={`Are you sure you want to withdraw your application for "${internshipToWithdraw?.title}"? This action cannot be undone.`}
+        confirmText="Withdraw"
+        variant="danger"
+      />
     </div>
   );
 };
