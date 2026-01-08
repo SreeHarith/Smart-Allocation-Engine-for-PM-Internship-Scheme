@@ -1,32 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { User, Notification, Admin, Company, Student } from "./types";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { User, Notification, Admin, Company, Student, Internship } from "./types";
 import NotificationToast from "./components/NotificationToast";
 import { generatePersonalizedNotification } from "./services/aiService";
 import HomePage from "./components/HomePage";
-import LoginPage from "./components/auth/LoginPage";
-import SignupPage from "./components/auth/SignupPage";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import SidebarLayout from "./components/layout/SidebarLayout";
 import {
   ADMIN_DATA,
   COMPANY_DATA,
   STUDENT_DATA,
-  INTERNSHIPS,
   NEW_INTERNSHIP_FOR_SIMULATION,
 } from "./constants";
 import { calculateMatchScore } from "./services/matchingService";
+import { api } from "./services/api";
 
-const App: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [currentView, setCurrentView] = useState<'HOME' | 'LOGIN' | 'SIGNUP'>('HOME');
+// Student Components
+import InternshipRecommendations from './components/InternshipRecommendations';
+import Profile from './components/Profile';
+import Upskilling from './components/Upskilling';
+import MentorChat from './components/MentorChat';
+import Simulator from './components/Simulator';
+import AIMockInterview from './components/AIMockInterview';
+import CertificatesPage from './components/CertificatesPage';
+
+// Other Dashboard Placeholders (You might need to import specific components for Company/Admin later)
+import CompanyDashboard from './components/CompanyDashboard';
+import AdminDashboard from './components/AdminDashboard';
+
+
+const AppContent: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('pm_internship_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const navigate = useNavigate();
 
   // --- Persistence ---
-  useEffect(() => {
-    const savedUser = localStorage.getItem('pm_internship_user');
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }
-  }, []);
+  // (Removed unnecessary useEffect for hydration)
 
   useEffect(() => {
     if (currentUser) {
@@ -89,7 +102,15 @@ const App: React.FC = () => {
       // 2. Deadline reminder simulation
       const showDeadlineReminder = async () => {
         const today = new Date();
-        const upcomingInternships = INTERNSHIPS.map((internship) => {
+        let internships: Internship[] = [];
+        try {
+          internships = await api.getInternships();
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+
+        const upcomingInternships = internships.map((internship) => {
           const deadline = new Date(internship.deadline);
           const daysLeft = Math.ceil(
             (deadline.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
@@ -146,70 +167,100 @@ const App: React.FC = () => {
     }
   }, [currentUser]);
 
-  const handleLogin = (role: "STUDENT" | "COMPANY" | "ADMIN") => {
-    switch (role) {
-      case "STUDENT":
-        setCurrentUser(STUDENT_DATA);
-        break;
-      case "COMPANY":
-        setCurrentUser(COMPANY_DATA);
-        break;
-      case "ADMIN":
-        setCurrentUser(ADMIN_DATA);
-        break;
-    }
-    setCurrentView('HOME'); // Not strictly needed as layout will take over
-  };
-
   const handleLogout = () => {
     setCurrentUser(null);
-    setCurrentView('HOME');
+    navigate('/');
   };
 
-  const renderContent = () => {
-    if (currentUser) {
-      return (
-        <SidebarLayout
-          user={currentUser}
-          onLogout={handleLogout}
-          addNotification={addNotification}
-          notifications={notifications}
-          markAllAsRead={markAllAsRead}
-          clearNotifications={clearNotifications}
-          onUpdateUser={handleUpdateUser}
-        >
-          {/* Main content is now handled within SidebarLayout based on user role */}
-        </SidebarLayout>
-      );
-    }
+  // Redirect Logic
+  useEffect(() => {
+     if (currentUser && window.location.pathname === '/') {
+        if (currentUser.role === 'STUDENT') navigate('/student/dashboard');
+        else if (currentUser.role === 'COMPANY') navigate('/company/dashboard');
+        else if (currentUser.role === 'ADMIN') navigate('/admin/dashboard');
+     }
+  }, [currentUser, navigate]);
 
-    switch (currentView) {
-      case 'LOGIN':
-        return (
-          <LoginPage
-            onLogin={handleLogin}
-            onSwitchToSignup={() => setCurrentView('SIGNUP')}
-            onBackToHome={() => setCurrentView('HOME')}
-          />
-        );
-      case 'SIGNUP':
-        return (
-          <SignupPage
-            onSignup={handleLogin}
-            onSwitchToLogin={() => setCurrentView('LOGIN')}
-            onBackToHome={() => setCurrentView('HOME')}
-          />
-        );
-      default:
-        return <HomePage onLogin={() => setCurrentView('LOGIN')} />;
-    }
-  };
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-      {renderContent()}
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={!currentUser ? <HomePage onLogin={() => navigate('/login')} /> : <Navigate to={
+            currentUser.role === 'STUDENT' ? '/student/dashboard' : 
+            currentUser.role === 'COMPANY' ? '/company/dashboard' : 
+            '/admin/dashboard'
+        } />} />
+        <Route path="/login" element={<Login onLogin={handleUpdateUser} />} />
+        <Route path="/register" element={<Register />} />
 
-      {/* Notification container */}
+        {/* Protected Routes - Student */}
+        {currentUser?.role === 'STUDENT' && (
+            <Route path="/student" element={
+                <SidebarLayout
+                    user={currentUser}
+                    onLogout={handleLogout}
+                    addNotification={addNotification}
+                    notifications={notifications}
+                    markAllAsRead={markAllAsRead}
+                    clearNotifications={clearNotifications}
+                    onUpdateUser={handleUpdateUser}
+                />
+            }>
+                <Route path="dashboard" element={<InternshipRecommendations student={currentUser as Student} addNotification={addNotification} />} />
+                <Route path="profile" element={<Profile student={currentUser as Student} onUpdateStudent={handleUpdateUser as any} />} />
+                <Route path="upskilling" element={<Upskilling student={currentUser as Student} />} />
+                <Route path="mentor" element={<MentorChat student={currentUser as Student} />} />
+                <Route path="simulator" element={<Simulator student={currentUser as Student} addNotification={addNotification} />} />
+                <Route path="interview" element={<AIMockInterview student={currentUser as Student} />} />
+                <Route path="certificates" element={<CertificatesPage />} />
+                <Route index element={<Navigate to="dashboard" replace />} />
+            </Route>
+        )}
+
+        {/* Protected Routes - Company */}
+        {currentUser?.role === 'COMPANY' && (
+             <Route path="/company" element={
+                <SidebarLayout
+                    user={currentUser}
+                    onLogout={handleLogout}
+                    addNotification={addNotification}
+                    notifications={notifications}
+                    markAllAsRead={markAllAsRead}
+                    clearNotifications={clearNotifications}
+                    onUpdateUser={handleUpdateUser}
+                />
+            }>
+                <Route path="dashboard" element={<CompanyDashboard company={currentUser as Company} activeView="dashboard" />} />
+                <Route path="post" element={<CompanyDashboard company={currentUser as Company} activeView="post" />} />
+                <Route index element={<Navigate to="dashboard" replace />} />
+                 {/* Fallback */}
+                <Route path="*" element={<Navigate to="dashboard" replace />} />
+             </Route>
+        )}
+         {/* Protected Routes - Admin */}
+          {currentUser?.role === 'ADMIN' && (
+             <Route path="/admin" element={
+                <SidebarLayout
+                    user={currentUser}
+                    onLogout={handleLogout}
+                    addNotification={addNotification}
+                    notifications={notifications}
+                    markAllAsRead={markAllAsRead}
+                    clearNotifications={clearNotifications}
+                    onUpdateUser={handleUpdateUser}
+                />
+            }>
+                 <Route path="*" element={<AdminDashboard admin={currentUser as Admin} activeView="dashboard" />} />
+             </Route>
+        )}
+        
+         {/* Catch all - 404 potentially, or redirect to Login */}
+         <Route path="*" element={currentUser ? <Navigate to="/" /> : <Navigate to="/login" />} />
+
+      </Routes>
+
+      {/* Notification container - Global */}
       <div className="fixed top-24 right-5 z-50 space-y-4 w-full max-w-[350px] pointer-events-none">
         {notifications
           .filter((n) => !n.read)
@@ -225,5 +276,13 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const App: React.FC = () => {
+    return (
+        <BrowserRouter>
+            <AppContent />
+        </BrowserRouter>
+    );
+}
 
 export default App;

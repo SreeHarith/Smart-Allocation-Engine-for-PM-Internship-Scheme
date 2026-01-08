@@ -1,5 +1,6 @@
 import { Student, Internship } from '../types';
-import { INTERNSHIPS, ALL_STUDENTS } from '../constants';
+import { api } from './api';
+import { ALL_STUDENTS } from '../constants';
 
 /**
  * Calculates a match score between a student and an internship.
@@ -8,45 +9,83 @@ import { INTERNSHIPS, ALL_STUDENTS } from '../constants';
  * @returns A match score from 0 to 100.
  */
 export const calculateMatchScore = (student: Student, internship: Internship): number => {
-  // Skill match (60% weight)
-  const studentSkills = new Set(student.skills);
-  const requiredSkills = new Set(internship.requiredSkills);
+  // 1. Role/Goal Match (30% weight) - CRITICAL FACTOR
+  // Check if career goals or industry focus align with the internship title
+  const careerGoals = student.careerGoals || "";
+  const industryFocus = student.industryFocus || [];
+  const goalWords = (careerGoals + " " + industryFocus.join(" ")).toLowerCase().split(/\W+/);
+  const titleWords = internship.title.toLowerCase().split(/\W+/);
+  const sectorWords = internship.sector.toLowerCase().split(/\W+/);
+  
+  const importantKeywords = new Set([...titleWords, ...sectorWords]);
+  // Filter out common stop words if needed, but for now simple matching
+  const stopWords = new Set(['a', 'an', 'the', 'in', 'of', 'for', 'intern', 'internship', 'become', 'company']);
+  
+  let roleMatchCount = 0;
+  let meaningfulKeywords = 0;
+  
+  importantKeywords.forEach(word => {
+     if (!stopWords.has(word) && word.length > 2) {
+         meaningfulKeywords++;
+         if (goalWords.includes(word)) {
+             roleMatchCount++;
+         }
+     }
+  });
+  
+  // If there are meaningful keywords, calculate score. If not (unlikely), give a baseline.
+  // We cap the match at 100% of the 30 points.
+  const roleMatchScore = meaningfulKeywords > 0 
+      ? Math.min(30, (roleMatchCount / Math.max(1, meaningfulKeywords * 0.5)) * 30) // slightly lenient denominator
+      : 15;
+
+
+  // 2. Skill match (50% weight)
+  const skills = student.skills || [];
+  const studentSkills = new Set(skills.map(s => s.toLowerCase()));
+  const requiredSkills = new Set(internship.requiredSkills.map(s => s.toLowerCase()));
   let matchedSkills = 0;
   requiredSkills.forEach(skill => {
     if (studentSkills.has(skill)) {
       matchedSkills++;
     }
   });
-  const skillMatchScore = requiredSkills.size > 0 ? (matchedSkills / requiredSkills.size) * 60 : 60;
+  const skillMatchScore = requiredSkills.size > 0 ? (matchedSkills / requiredSkills.size) * 50 : 50;
 
-  // Location preference (10 points)
-  let locationBonus = 0;
-  if (internship.location === 'Remote' || student.locationPreference.includes(internship.location)) {
-    locationBonus = 10;
+  // 3. Logistics Balance (20% weight total)
+  let logisticsScore = 0;
+
+  // Location preference (5 points)
+  const locPref = student.locationPreference || "";
+  if (internship.location === 'Remote' || (locPref && locPref.includes(internship.location))) {
+    logisticsScore += 5;
   }
 
-  // Company size preference (10 points)
-  let companySizeBonus = 0;
-  if (student.preferredCompanySize === 'Any' || student.preferredCompanySize === internship.companySize) {
-    companySizeBonus = 10;
+  // Company size preference (5 points)
+  if (!student.preferredCompanySize || student.preferredCompanySize === 'Any' || student.preferredCompanySize === internship.companySize) {
+    logisticsScore += 5;
   }
 
-  // Industry focus preference (10 points)
-  let industryFocusBonus = 0;
-  if (student.industryFocus.length === 0 || student.industryFocus.includes(internship.sector)) {
-      industryFocusBonus = 10;
+  // Industry focus preference (5 points)
+  // (Redundant with Role Match but explicitly checks the metadata field)
+  if (industryFocus.length === 0 || industryFocus.includes(internship.sector)) {
+      logisticsScore += 5;
   }
 
-  // Duration preference (10 points)
-  let durationBonus = 0;
-  if (student.preferredDuration === 'Any' || student.preferredDuration === internship.duration) {
-      durationBonus = 10;
+  // Duration preference (5 points)
+  if (!student.preferredDuration || student.preferredDuration === 'Any' || student.preferredDuration === internship.duration) {
+      logisticsScore += 5;
   }
 
-  let score = Math.round(skillMatchScore + locationBonus + companySizeBonus + industryFocusBonus + durationBonus);
+  let finalScore = Math.round(roleMatchScore + skillMatchScore + logisticsScore);
   
+  // Penalize drastically if Role Match is 0 to avoid "accidental" high scores just from logistics
+  if (roleMatchScore === 0) {
+      finalScore = Math.round(finalScore * 0.6); // 40% penalty
+  }
+
   // Ensure score is within 0-100 range
-  return Math.min(100, Math.max(0, score));
+  return Math.min(100, Math.max(0, finalScore));
 };
 
 /**
@@ -56,16 +95,22 @@ export const calculateMatchScore = (student: Student, internship: Internship): n
  * @param dislikedIds - An array of internship IDs to exclude.
  * @returns An array of top matched internships.
  */
-export const getTopMatches = (student: Student, count: number, dislikedIds: number[] = []): Internship[] => {
-  return INTERNSHIPS
-    .filter(internship => !dislikedIds.includes(internship.id)) // Filter out disliked internships
-    .map(internship => ({
-      internship,
-      score: calculateMatchScore(student, internship),
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, count)
-    .map(item => item.internship);
+export const getTopMatches = async (student: Student, count: number, dislikedIds: number[] = []): Promise<Internship[]> => {
+  try {
+    const internships = await api.getInternships();
+    return internships
+      .filter(internship => !dislikedIds.includes(internship.id)) // Filter out disliked internships
+      .map(internship => ({
+        internship,
+        score: calculateMatchScore(student, internship),
+      }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, count)
+      .map(item => item.internship);
+  } catch (error) {
+    console.error("Failed to fetch matches:", error);
+    return [];
+  }
 };
 
 /**
@@ -74,12 +119,21 @@ export const getTopMatches = (student: Student, count: number, dislikedIds: numb
  * @param count - The number of top applicants to return.
  * @returns An array of top matched students with their scores.
  */
-export const getTopApplicants = (internship: Internship, count: number): { student: Student, score: number }[] => {
-    return ALL_STUDENTS
-        .map(student => ({
-            student,
-            score: calculateMatchScore(student, internship),
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, count);
+export const getTopApplicants = async (internship: Internship, count: number): Promise<{ student: Student, score: number }[]> => {
+    try {
+        const allStudents = await api.getStudents();
+        const applicantIds = new Set(internship.applicants || []);
+        
+        return allStudents
+            .filter(student => applicantIds.has(student.id))
+            .map(student => ({
+                student,
+                score: calculateMatchScore(student, internship),
+            }))
+            .sort((a, b) => b.score - a.score)
+            .slice(0, count);
+    } catch (error) {
+        console.error("Failed to fetch applicants:", error);
+        return [];
+    }
 };

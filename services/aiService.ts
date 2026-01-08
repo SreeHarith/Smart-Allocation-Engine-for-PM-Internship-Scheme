@@ -94,32 +94,22 @@ interface ChatMessage {
 /**
  * Gets a response from the AI chatbot.
  */
+/**
+ * Gets a response from the AI chatbot via the Backend API.
+ */
+import { api } from "./api"; // Ensure api is imported
+
 export const getChatbotResponse = async (
   message: string,
   history: ChatMessage[],
   student: Student
 ): Promise<string> => {
-  const systemInstruction = `You are AI Mentor, a supportive chatbot for students.
-  Student: ${student.name}
-  Goals: ${student.careerGoals}
-  Skills: ${student.skills.join(", ")}
-  
-  (Behave like a helpful mentor. Keep responses concise and friendly.)`;
-
-  // Format messages for OpenRouter
-  const messages = [
-    { role: "system", content: systemInstruction },
-    ...history.map((msg) => ({
-      role: msg.sender === "user" ? "user" : "assistant",
-      content: msg.text,
-    })),
-    { role: "user", content: message },
-  ];
-
   try {
-    return await getCompletion(messages);
+      // Call our backend endpoint instead of direct OpenRouter
+      return await api.chatWithMentor(message, history, student.id);
   } catch (error) {
-    return "I'm having trouble connecting right now.";
+    console.error("AI Service Error:", error);
+    return "I'm having a little trouble connecting to my knowledge base right now. Please try again in a moment.";
   }
 };
 

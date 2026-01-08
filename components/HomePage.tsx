@@ -116,80 +116,75 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
         {/* Core Benefits Section */}
         <section className="pb-24 lg:pb-32 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-gradient-to-br from-brand-600 to-accent-600 rounded-[3rem] p-8 lg:p-16 text-white relative overflow-hidden flex flex-col lg:flex-row items-center gap-12">
+            <div className="bg-white rounded-[3rem] p-8 lg:p-16 relative overflow-hidden flex flex-col lg:flex-row items-center gap-16 border border-slate-100 shadow-2xl shadow-slate-200/50">
+              
               <div className="lg:w-1/2 relative z-10 text-center lg:text-left">
-                <div className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-widest mb-6 border border-white/20">
-                  Program Highlights
+                <div className="inline-block px-4 py-1.5 bg-brand-50 rounded-full text-xs font-bold uppercase tracking-widest mb-6 text-brand-600">
+                  Why join us?
                 </div>
-                <h2 className="text-4xl lg:text-6xl font-display font-black mb-6 leading-tight">
-                  Core <span className="text-accent-300 underline decoration-4 underline-offset-8 decoration-accent-300">Benefits</span>
+                <h2 className="text-4xl lg:text-5xl font-display font-black mb-6 leading-tight text-slate-900">
+                  More than just an <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">internship</span>.
                 </h2>
-                <p className="text-lg text-brand-50 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0 opacity-90">
-                  The PM Internship Scheme is designed to empower India's youth with practical experience and robust financial support.
+                <p className="text-lg text-slate-600 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
+                   Launch your career with financial independence and real-world skills. We've got your back every step of the way.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
                   {[
-                    { label: 'Govt. Stipend', value: '₹4,500/Mo', icon: <WalletIcon className="w-6 h-6" />, details: 'Direct Benefit Transfer' },
-                    { label: 'Company Share', value: '₹500/Mo', icon: <BuildingLibraryIcon className="w-6 h-6" />, details: 'Industry Contribution' },
-                    { label: 'One-time Grant', value: '₹6,000', icon: <OneTimeGrantIcon className="w-6 h-6" />, details: 'Initial Support' },
-                    { label: 'Work Experience', value: '12 Months', icon: <BriefcaseIcon className="w-6 h-6" />, details: 'Career Foundation' },
+                    { label: 'Monthly Stipend', value: '₹4,500', icon: <WalletIcon className="w-6 h-6" />, details: 'Directly to your bank', color: 'bg-blue-50 text-blue-600' },
+                    { label: 'Industry Top-up', value: '+ ₹500', icon: <BuildingLibraryIcon className="w-6 h-6" />, details: 'From your company', color: 'bg-emerald-50 text-emerald-600' },
+                    { label: 'Kickstart Grant', value: '₹6,000', icon: <OneTimeGrantIcon className="w-6 h-6" />, details: 'For books & travel', color: 'bg-purple-50 text-purple-600' },
+                    { label: 'Experience', value: '1 Year', icon: <BriefcaseIcon className="w-6 h-6" />, details: 'Real projects', color: 'bg-orange-50 text-orange-600' },
                   ].map((benefit, i) => (
-                    <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-3xl p-6 hover:bg-white/20 transition-all group">
-                      <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-accent-300 transition-transform group-hover:scale-110">
+                    <div key={i} className="bg-white border border-slate-100 rounded-3xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all group duration-300">
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 ${benefit.color}`}>
                         {benefit.icon}
                       </div>
-                      <div className="text-2xl font-bold mb-1">{benefit.value}</div>
-                      <div className="text-xs font-medium text-brand-100 uppercase tracking-widest opacity-80">{benefit.label}</div>
-                      <div className="mt-2 text-[10px] text-brand-200 font-medium">{benefit.details}</div>
+                      <div className="text-2xl font-bold mb-1 text-slate-900">{benefit.value}</div>
+                      <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">{benefit.label}</div>
+                      <div className="mt-2 text-[11px] text-slate-500 font-medium bg-slate-50 inline-block px-2 py-1 rounded-md">{benefit.details}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="lg:w-1/2 relative flex justify-center w-full">
-                <div className="relative animate-float w-full max-w-lg">
-                  <div className="absolute -inset-4 bg-gradient-to-br from-brand-400 to-accent-300 rounded-[3rem] blur-3xl opacity-20 -z-10" />
-                  <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 lg:p-12 shadow-2xl relative h-full">
-                    <div className="space-y-12 h-full flex flex-col justify-between">
-                      <div className="space-y-8">
-                        {[
-                          { title: 'Industry Networking', desc: 'Connect with top corporate leaders', icon: <UserGroupIcon className="w-5 h-5" /> },
-                          { title: 'Career Growth', desc: 'Accelerate your career trajectory', icon: <ChartPieIcon className="w-5 h-5" /> },
-                          { title: 'Skill Mastery', desc: 'Master modern AI & digital tools', icon: <BeakerIcon className="w-5 h-5" /> },
-                        ].map((item, i) => (
-                          <div key={i} className="flex items-center space-x-6 group/item">
-                            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 border border-white/10 group-hover/item:bg-white/20 transition-colors">
-                              <div className="text-accent-300">
-                                {item.icon}
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <div className="text-lg font-bold text-white mb-0.5">{item.title}</div>
-                              <div className="text-sm text-brand-100 opacity-70">{item.desc}</div>
-                            </div>
+                <div className="relative animate-float-slow w-full max-w-lg">
+                  {/* Abstract blob background */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-brand-100 to-accent-100 rounded-full blur-3xl -z-10 opacity-60" />
+                  
+                  <div className="bg-white/80 backdrop-blur-xl border border-white rounded-[2.5rem] p-8 lg:p-10 shadow-xl relative">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-8">Your Growth Journey</h3>
+                    <div className="space-y-8">
+                      {[
+                        { title: 'Build Your Network', desc: 'Connect with mentors & leaders.', icon: <UserGroupIcon className="w-5 h-5" />, color: 'bg-indigo-100 text-indigo-600' },
+                        { title: 'Fast-track Career', desc: 'Skip the entry-level struggle.', icon: <ChartPieIcon className="w-5 h-5" />, color: 'bg-pink-100 text-pink-600' },
+                        { title: 'Master AI Tools', desc: 'Learn skills for the future.', icon: <BeakerIcon className="w-5 h-5" />, color: 'bg-cyan-100 text-cyan-600' },
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center space-x-5 group/item">
+                          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${item.color} group-hover/item:scale-110 transition-transform`}>
+                            {item.icon}
                           </div>
-                        ))}
-                      </div>
+                          <div className="flex-1">
+                            <div className="text-lg font-bold text-slate-900 mb-0.5">{item.title}</div>
+                            <div className="text-sm text-slate-500">{item.desc}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
-                      {/* Integrated "Certified" Badge - now perfectly aligned and moving with the list */}
-                      <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl flex items-center space-x-4 border border-gray-100 dark:border-gray-700 self-start animate-float-slow">
-                        <div className="h-12 w-12 bg-accent-100 dark:bg-accent-900/30 rounded-2xl flex items-center justify-center text-accent-600 dark:text-accent-400">
+                    <div className="mt-10 bg-brand-600 p-5 rounded-2xl shadow-lg shadow-brand-200 flex items-center space-x-4 transform translate-x-4 translate-y-4">
+                        <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center text-white">
                           <CheckCircleIcon className="w-6 h-6" />
                         </div>
                         <div>
-                          <div className="text-lg font-bold text-gray-900 dark:text-white">Certified</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">Govt recognized experience</div>
+                          <div className="text-base font-bold text-white">Govt. Recognized</div>
+                          <div className="text-xs text-brand-100 opacity-90">Certificate of Experience</div>
                         </div>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* Decorative elements */}
-              <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-[100px] pointer-events-none" />
-              <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-accent-400/10 rounded-full blur-[100px] pointer-events-none" />
             </div>
           </div>
         </section>

@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Student } from '../types';
 import { COURSES, INTERNSHIPS } from '../constants';
 import { getTopMatches } from '../services/matchingService';
@@ -11,23 +11,41 @@ interface UpskillingProps {
 }
 
 const Upskilling: React.FC<UpskillingProps> = ({ student }) => {
-  const { missingSkills, recommendedCourses } = useMemo(() => {
-    // Student ke top 5 matches ke liye skill gap analyze karte hain.
-    // Analyzing skill gaps for the student's top 5 matches.
-    const topInternships = getTopMatches(student, 5);
-    const requiredSkills = new Set(topInternships.flatMap(i => i.requiredSkills));
-    const studentSkills = new Set(student.skills);
-    
-    const missing = Array.from(requiredSkills).filter(skill => !studentSkills.has(skill));
-    
-    // Missing skills ke liye courses recommend karte hain.
-    // Recommending courses for the missing skills.
-    const recommended = COURSES.filter(course => 
-      course.coversSkills.some(skill => missing.includes(skill))
-    );
+  const [missingSkills, setMissingSkills] = React.useState<string[]>([]);
+  const [recommendedCourses, setRecommendedCourses] = React.useState<typeof COURSES>([]);
+  const [loading, setLoading] = React.useState(true);
 
-    return { missingSkills: missing, recommendedCourses: recommended };
+  React.useEffect(() => {
+    const fetchSkills = async () => {
+        setLoading(true);
+        try {
+            // Analyzing skill gaps for the student's top 5 matches.
+            const topInternships = await getTopMatches(student, 5);
+            const requiredSkills = new Set(topInternships.flatMap(i => i.requiredSkills));
+            const studentSkills = new Set(student.skills);
+            
+            const missing = Array.from(requiredSkills).filter(skill => !studentSkills.has(skill));
+            
+            // Recommending courses for the missing skills.
+            const recommended = COURSES.filter(course => 
+              course.coversSkills.some(skill => missing.includes(skill))
+            );
+            
+            setMissingSkills(missing);
+            setRecommendedCourses(recommended);
+        } catch (e) {
+            console.error("Failed to analyze skills", e);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchSkills();
   }, [student]);
+
+  if (loading) {
+      return <div className="p-8 text-center text-gray-500">Analyzing your profile...</div>;
+  }
 
   if (missingSkills.length === 0) {
     return <p className="text-green-600 dark:text-green-400">Great! You have all the required skills for your top internship matches.</p>;

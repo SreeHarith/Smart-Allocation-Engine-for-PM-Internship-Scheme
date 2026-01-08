@@ -55,6 +55,7 @@ export interface Internship {
   // New field for matching
   companySize: 'Startup' | 'Mid-size' | 'MNC';
   stipend?: string;
+  applicants?: number[];
 }
 
 export interface Course {

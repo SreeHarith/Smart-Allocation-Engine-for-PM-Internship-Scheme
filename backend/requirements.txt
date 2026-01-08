@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic
+motor
+beanie
+python-dotenv
+pydantic-settings
+passlib[argon2]
+httpx

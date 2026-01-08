@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PostInternshipForm from './PostInternshipForm';
 import PostedInternshipsList from './PostedInternshipsList';
 import { Company, Internship } from '../types';
 import ApplicantTable from './ApplicantTable';
 import Button from './common/Button';
-import { INTERNSHIPS } from '../constants'; // Need to manage internships in state
 import ConfirmationModal from './common/ConfirmationModal';
+
+import { api } from '../services/api';
 
 interface CompanyDashboardProps {
     company: Company;
@@ -13,15 +15,28 @@ interface CompanyDashboardProps {
 }
 
 const CompanyDashboard: React.FC<CompanyDashboardProps> = ({ company, activeView }) => {
+    const navigate = useNavigate();
     const [selectedInternshipForApplicants, setSelectedInternshipForApplicants] = useState<Internship | null>(null);
     const [internshipToEdit, setInternshipToEdit] = useState<Internship | null>(null);
     const [internshipToWithdraw, setInternshipToWithdraw] = useState<Internship | null>(null);
     const [isPosting, setIsPosting] = useState(false);
 
     // Manage internships in state so they can be modified
-    const [postedInternships, setPostedInternships] = useState<Internship[]>(
-        () => INTERNSHIPS.filter(i => i.company === 'InnovateAI Corp' || i.company === 'WebSolutions Ltd.')
-    );
+    const [postedInternships, setPostedInternships] = useState<Internship[]>([]);
+
+    useEffect(() => {
+        const fetchInternships = async () => {
+             try {
+                const allInternships = await api.getInternships();
+                // Filter for this company's internships
+                const myInternships = allInternships.filter(i => i.company === company.name);
+                setPostedInternships(myInternships);
+             } catch (e) {
+                 console.error("Failed to fetch internships", e);
+             }
+        }
+        fetchInternships();
+    }, [company.name, activeView]); // Re-fetch when view changes (e.g. after posting)
 
     // Reset view when sidebar navigation changes
     useEffect(() => {
@@ -31,21 +46,30 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = ({ company, activeView
     }, [activeView]);
 
 
-    const handleSaveInternship = (internshipData: Omit<Internship, 'id' | 'company' | 'sector' | 'deadline' | 'companySize'> & { id?: number }) => {
+    const handleSaveInternship = async (internshipData: Omit<Internship, 'id' | 'company' | 'sector' | 'deadline' | 'companySize'> & { id?: number }) => {
         if (internshipToEdit) {
-            // Update existing internship
-            setPostedInternships(prev => prev.map(i => i.id === internshipToEdit.id ? { ...i, ...internshipData } as Internship : i));
+            // Update existing internship - API update logic would go here (not yet implemented in backend)
+            // setPostedInternships(prev => prev.map(i => i.id === internshipToEdit.id ? { ...i, ...internshipData } as Internship : i));
+            console.warn("Update not yet implemented in backend");
         } else {
             // Add new internship
-            const newInternship: Internship = {
+            const newInternshipBase: Internship = {
                 ...internshipData,
-                id: Date.now(),
+                id: Date.now(), // specific ID logic might be handled by backend, but we send a placeholder or 0
                 company: company.name,
                 sector: 'Tech', // Placeholder
                 deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
                 companySize: 'Mid-size', // Placeholder
             };
-            setPostedInternships(prev => [newInternship, ...prev]);
+            
+            try {
+                const createdInternship = await api.createInternship(newInternshipBase);
+                setPostedInternships(prev => [createdInternship, ...prev]);
+                // Redirect to dashboard to see the new internship
+                navigate('/company/dashboard');
+            } catch (e) {
+                console.error("Failed to create internship", e);
+            }
         }
         setInternshipToEdit(null);
         setIsPosting(false);
@@ -105,16 +129,7 @@ const CompanyDashboard: React.FC<CompanyDashboardProps> = ({ company, activeView
                     <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">Manage your active internship postings and applicants</p>
                 </div>
 
-                <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 p-2 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
-                    <div className="px-4 py-2 text-center border-r border-gray-100 dark:border-gray-700">
-                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Active</div>
-                        <div className="text-xl font-display font-black text-gray-900 dark:text-white">{postedInternships.length}</div>
-                    </div>
-                    <div className="px-4 py-2 text-center">
-                        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">New Applied</div>
-                        <div className="text-xl font-display font-black text-emerald-500">24</div>
-                    </div>
-                </div>
+                <div></div>
             </div>
 
             <div className="relative">

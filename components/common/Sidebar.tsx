@@ -1,6 +1,7 @@
 
 
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import {
     ChartPieIcon, BriefcaseIcon, GraduationCapIcon, UserGroupIcon,
     AcademicCapIcon, BeakerIcon, LightBulbIcon, DocumentPlusIcon, UsersIcon, VideoCameraIcon
@@ -8,60 +9,62 @@ import {
 
 interface SidebarProps {
     userRole: 'STUDENT' | 'COMPANY' | 'ADMIN';
-    activeView: string;
-    setActiveView: (view: string) => void;
     isCollapsed: boolean;
     onToggle: () => void;
 }
 
 const NavItem: React.FC<{
+    to: string;
     label: string;
     icon: React.FC<React.SVGProps<SVGSVGElement>>;
-    isActive: boolean;
-    onClick: () => void;
     isCollapsed: boolean;
-}> = ({ label, icon: Icon, isActive, onClick, isCollapsed }) => (
+}> = ({ to, label, icon: Icon, isCollapsed }) => (
     <li className="relative z-10">
-        <button
-            onClick={(e) => { e.preventDefault(); onClick(); }}
+        <NavLink
+            to={to}
+            end
             title={isCollapsed ? label : ''}
-            className={`w-full group flex items-center ${isCollapsed ? 'justify-center' : 'px-4'} py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${isActive
-                ? 'text-white'
-                : 'text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white'
+            className={({ isActive }) => `w-full group flex items-center ${isCollapsed ? 'justify-center' : 'px-4'} py-3 text-sm font-medium rounded-2xl transition-all duration-300 ${isActive
+                ? 'bg-brand-600 text-white shadow-md shadow-brand-200 dark:shadow-none'
+                : 'text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
         >
-            <div className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-brand-600 dark:group-hover:text-white'}`} />
-            </div>
-            {!isCollapsed && <span className="ml-3 capitalize whitespace-nowrap">{label}</span>}
-            {isActive && !isCollapsed && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-80" />
+            {({ isActive }) => (
+                <>
+                    <div className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
+                        <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-brand-600 dark:group-hover:text-white'}`} />
+                    </div>
+                    {!isCollapsed && <span className="ml-3 capitalize whitespace-nowrap">{label}</span>}
+                    {isActive && !isCollapsed && (
+                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white opacity-80" />
+                    )}
+                </>
             )}
-        </button>
+        </NavLink>
     </li>
 );
 
-const Sidebar: React.FC<SidebarProps> = ({ userRole, activeView, setActiveView, isCollapsed, onToggle }) => {
+const Sidebar: React.FC<SidebarProps> = ({ userRole, isCollapsed, onToggle }) => {
 
     const studentNav = [
-        { name: 'Dashboard', view: 'dashboard', icon: ChartPieIcon },
-        { name: 'My Profile', view: 'profile', icon: UserGroupIcon },
-        { name: 'Upskilling Hub', view: 'upskilling', icon: AcademicCapIcon },
-        { name: 'AI Mentor', view: 'mentor', icon: LightBulbIcon },
-        { name: 'Simulator', view: 'simulator', icon: BeakerIcon },
-        { name: 'Mock Interview', view: 'interview', icon: VideoCameraIcon },
-        { name: 'Certificates', view: 'certificates', icon: GraduationCapIcon },
+        { name: 'Dashboard', path: '/student/dashboard', icon: ChartPieIcon },
+        { name: 'My Profile', path: '/student/profile', icon: UserGroupIcon },
+        { name: 'Upskilling Hub', path: '/student/upskilling', icon: AcademicCapIcon },
+        { name: 'AI Mentor', path: '/student/mentor', icon: LightBulbIcon },
+        { name: 'Simulator', path: '/student/simulator', icon: BeakerIcon },
+        { name: 'Mock Interview', path: '/student/interview', icon: VideoCameraIcon },
+        { name: 'Certificates', path: '/student/certificates', icon: GraduationCapIcon },
     ];
 
     const companyNav = [
-        { name: 'Dashboard', view: 'dashboard', icon: ChartPieIcon },
-        { name: 'Post Internship', view: 'post', icon: DocumentPlusIcon },
+        { name: 'Dashboard', path: '/company/dashboard', icon: ChartPieIcon },
+        { name: 'Post Internship', path: '/company/post', icon: DocumentPlusIcon },
     ];
 
     const adminNav = [
-        { name: 'Dashboard', view: 'dashboard', icon: ChartPieIcon },
-        { name: 'Manage Users', view: 'users', icon: UsersIcon },
-        { name: 'Analytics', view: 'analytics', icon: ChartPieIcon },
+        { name: 'Dashboard', path: '/admin/dashboard', icon: ChartPieIcon },
+        { name: 'Manage Users', path: '/admin/users', icon: UsersIcon },
+        { name: 'Analytics', path: '/admin/analytics', icon: ChartPieIcon },
     ];
 
     let navItems = [];
@@ -76,8 +79,6 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, activeView, setActiveView, 
             navItems = adminNav;
             break;
     }
-
-    const activeIndex = navItems.findIndex(item => item.view === activeView);
 
     return (
         <aside className={`${isCollapsed ? 'w-20' : 'w-72'} bg-gray-50 dark:bg-gray-900 overflow-y-auto border-r border-gray-100 dark:border-gray-800 transition-all duration-300 ease-in-out`} aria-label="Sidebar">
@@ -116,25 +117,13 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, activeView, setActiveView, 
                     )}
 
                     <div className="relative">
-                        {/* Sliding Background Indicator */}
-                        {activeIndex !== -1 && (
-                            <div
-                                className="absolute left-0 w-full bg-brand-600 rounded-2xl shadow-lg shadow-brand-100 dark:shadow-none transition-all duration-300 ease-out z-0"
-                                style={{
-                                    height: '44px',
-                                    top: `${activeIndex * (44 + 8)}px`,
-                                }}
-                            />
-                        )}
-
                         <ul className="space-y-2 relative z-10">
                             {navItems.map((item) => (
                                 <NavItem
-                                    key={item.view}
+                                    key={item.path}
                                     label={item.name}
                                     icon={item.icon}
-                                    isActive={activeView === item.view}
-                                    onClick={() => setActiveView(item.view)}
+                                    to={item.path}
                                     isCollapsed={isCollapsed}
                                 />
                             ))}

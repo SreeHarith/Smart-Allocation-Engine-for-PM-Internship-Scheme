@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Student, Notification, Internship } from '../types';
 import { getTopMatches } from '../services/matchingService';
+import { api } from '../services/api';
 import InternshipCard from './InternshipCard';
 import Button from './common/Button';
 import { ArrowPathIcon, BriefcaseIcon } from './common/Icons';
@@ -19,20 +20,38 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   const [refreshKey, setRefreshKey] = useState(0);
   const [internshipToWithdraw, setInternshipToWithdraw] = useState<Internship | null>(null);
 
-  const topMatches = useMemo(() => {
-    return getTopMatches(student, 6, dislikedIds);
+  const [topMatches, setTopMatches] = useState<Internship[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchMatches = async () => {
+      setLoading(true);
+      const matches = await getTopMatches(student, 6, dislikedIds);
+      setTopMatches(matches);
+      setLoading(false);
+    };
+    fetchMatches();
   }, [student, dislikedIds, refreshKey]);
 
   const handleDislike = (internshipId: number) => {
     setDislikedIds(prev => [...prev, internshipId]);
   };
 
-  const handleApply = (internshipId: number, internshipTitle: string) => {
-    setAppliedIds(prev => [...prev, internshipId]);
-    addNotification({
-      message: `Successfully applied for the "${internshipTitle}" internship!`,
-      type: 'success',
-    });
+  const handleApply = async (internshipId: number, internshipTitle: string) => {
+    try {
+      await api.applyToInternship(internshipId, student.id);
+      setAppliedIds(prev => [...prev, internshipId]);
+      addNotification({
+        message: `Successfully applied for the "${internshipTitle}" internship!`,
+        type: 'success',
+      });
+    } catch (error) {
+      console.error(error);
+      addNotification({
+        message: `Failed to apply for "${internshipTitle}". Please try again.`,
+        type: 'error',
+      });
+    }
   };
 
   const handleWithdraw = (internship: Internship) => {
@@ -59,7 +78,7 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Recommended for You</h2>
@@ -77,7 +96,11 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
         </Button>
       </div>
 
-      {topMatches.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <Spinner />
+        </div>
+      ) : topMatches.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 px-8 bg-white dark:bg-gray-800 rounded-[3rem] shadow-premium border border-gray-100 dark:border-gray-700 text-center">
           <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-500 mb-6">
             <BriefcaseIcon className="h-10 w-10" />
@@ -89,7 +112,7 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
           <Button variant="light" className="mt-8" onClick={() => setDislikedIds([])}>Reset Preferences</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
           {topMatches.map(internship => (
             <InternshipCard
               key={internship.id}

@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../common/Sidebar';
 import Header from '../common/Header';
-import { User, Notification, Student } from '../../types';
-import StudentDashboard from '../StudentDashboard';
-import CompanyDashboard from '../CompanyDashboard';
-import AdminDashboard from '../AdminDashboard';
+import { User, Notification } from '../../types';
 import NotificationPanel from '../NotificationPanel';
 
 interface SidebarLayoutProps {
@@ -20,13 +18,10 @@ interface SidebarLayoutProps {
 const SidebarLayout: React.FC<SidebarLayoutProps> = ({
     user,
     onLogout,
-    addNotification,
     notifications,
     markAllAsRead,
     clearNotifications,
-    onUpdateUser
 }) => {
-    const [activeView, setActiveView] = useState('dashboard');
     const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -39,32 +34,10 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
         }
     };
 
-    const renderDashboard = () => {
-        switch (user.role) {
-            case 'STUDENT':
-                return (
-                    <StudentDashboard
-                        student={user as Student}
-                        addNotification={addNotification}
-                        activeView={activeView}
-                        onUpdateStudent={(updatedStudent) => onUpdateUser(updatedStudent)}
-                    />
-                );
-            case 'COMPANY':
-                return <CompanyDashboard company={user} activeView={activeView} />;
-            case 'ADMIN':
-                return <AdminDashboard admin={user} activeView={activeView} />;
-            default:
-                return <div>Invalid user role</div>;
-        }
-    };
-
     return (
         <div className="flex h-screen bg-gray-100 dark:bg-gray-900 overflow-hidden">
             <Sidebar
                 userRole={user.role}
-                activeView={activeView}
-                setActiveView={setActiveView}
                 isCollapsed={isSidebarCollapsed}
                 onToggle={toggleSidebar}
             />
@@ -76,7 +49,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({
                     onBellClick={handleBellClick}
                 />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-800 relative">
-                    {renderDashboard()}
+                    <Outlet />
                     {isNotificationPanelOpen && (
                         <NotificationPanel
                             notifications={notifications}

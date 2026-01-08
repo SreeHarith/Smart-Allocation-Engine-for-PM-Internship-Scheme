@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from './common/Button';
 import Card from './common/Card';
+import CustomSelect from './common/CustomSelect';
 import { Internship } from '../types';
 
 interface PostInternshipFormProps {
@@ -89,55 +90,109 @@ const PostInternshipForm: React.FC<PostInternshipFormProps> = ({ onSave, onCance
         {internshipToEdit ? 'Edit Internship' : 'Post a New Internship'}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Internship Title</label>
-          <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-          {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
-        </div>
+        <div className="space-y-6">
+            <div>
+              <label htmlFor="title" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Internship Title</label>
+              <input type="text" id="title" name="title" value={formData.title} onChange={handleChange} className="block w-full rounded-xl border-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500 p-3 text-sm" placeholder="e.g. Product Management Intern" />
+              {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
+            </div>
 
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-          <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500"></textarea>
-          {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location</label>
-              <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-              {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
+              <label htmlFor="description" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Description</label>
+              <textarea id="description" name="description" value={formData.description} onChange={handleChange} rows={4} className="block w-full rounded-xl border-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500 p-3 text-sm" placeholder="Describe the role responsibilities and requirements..."></textarea>
+              {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
-             <div>
-              <label htmlFor="duration" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Duration (e.g., 3 Months)</label>
-              <input type="text" id="duration" name="duration" value={formData.duration} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-              {errors.duration && <p className="text-red-500 text-xs mt-1">{errors.duration}</p>}
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="location" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Location</label>
+                  <CustomSelect
+                      options={[
+                          'Remote', 'Bangalore', 'Delhi NCR', 'Mumbai', 'Hyderabad', 'Pune', 'Chennai'
+                      ]}
+                      value={formData.location}
+                      onChange={(value) => setFormData(prev => ({ ...prev, location: value as string }))}
+                      placeholder="Select Location"
+                      error={errors.location}
+                  />
+                </div>
+                 <div>
+                  <label htmlFor="duration" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Duration</label>
+                  <CustomSelect
+                      options={['3 Months', '6 Months']}
+                      value={formData.duration}
+                      onChange={(value) => setFormData(prev => ({ ...prev, duration: value as string }))}
+                      placeholder="Select Duration"
+                      error={errors.duration}
+                  />
+                </div>
             </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-1">
-              <label htmlFor="requiredSkills" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Required Skills (comma-separated)</label>
-              <input type="text" id="requiredSkills" name="requiredSkills" value={formData.requiredSkills} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-              {errors.requiredSkills && <p className="text-red-500 text-xs mt-1">{errors.requiredSkills}</p>}
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-1">
+                  <label htmlFor="requiredSkills" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Required Skills</label>
+                   <CustomSelect
+                      options={[
+                          'Python', 'Java', 'React', 'Node.js', 'Data Analysis',
+                          'Project Management', 'Marketing', 'Communication',
+                          'Design', 'SQL'
+                      ].filter(skill => !formData.requiredSkills.includes(skill))}
+                      value=""
+                      onChange={(value) => {
+                          const val = value as string;
+                          if (val && !formData.requiredSkills.includes(val)) {
+                              const newSkills = formData.requiredSkills ? `${formData.requiredSkills}, ${val}` : val;
+                              const cleanSkills = newSkills.replace(/^, /, '');
+                              setFormData(prev => ({ ...prev, requiredSkills: cleanSkills }));
+                          }
+                      }}
+                      placeholder="Add a Skill..."
+                  />
+                  <div className="mt-3 flex flex-wrap gap-2">
+                      {formData.requiredSkills.split(',').map(s => s.trim()).filter(Boolean).map(skill => (
+                          <span key={skill} className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300 border border-brand-100 dark:border-brand-800">
+                              {skill}
+                              <button
+                                  type="button"
+                                  onClick={() => {
+                                      const currentSkills = formData.requiredSkills.split(',').map(s => s.trim()).filter(Boolean);
+                                      const newSkills = currentSkills.filter(s => s !== skill).join(', ');
+                                      setFormData(prev => ({ ...prev, requiredSkills: newSkills }));
+                                  }}
+                                  className="ml-1.5 text-brand-400 hover:text-brand-600 dark:text-brand-500 dark:hover:text-brand-300 focus:outline-none"
+                              >
+                                  &times;
+                              </button>
+                          </span>
+                      ))}
+                  </div>
+                  {errors.requiredSkills && <p className="text-red-500 text-xs mt-1">{errors.requiredSkills}</p>}
+                </div>
+                <div>
+                  <label htmlFor="seats" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Number of Seats</label>
+                  <CustomSelect
+                      options={[...Array(20)].map((_, i) => ({ label: String(i + 1), value: i + 1 }))}
+                      value={formData.seats ? Number(formData.seats) : ''}
+                      onChange={(value) => setFormData(prev => ({ ...prev, seats: String(value) }))}
+                      placeholder="Select Seats"
+                      error={errors.seats}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="stipend" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Stipend (e.g., ₹20,000 / month)</label>
+                  <input type="text" id="stipend" name="stipend" value={formData.stipend} onChange={handleChange} className="block w-full rounded-xl border-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500 p-3 text-sm" placeholder="₹20,000 / month" />
+                  {errors.stipend && <p className="text-red-500 text-xs mt-1">{errors.stipend}</p>}
+                </div>
             </div>
-            <div>
-              <label htmlFor="seats" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Number of Seats</label>
-              <input type="number" id="seats" name="seats" value={formData.seats} onChange={handleChange} min="1" className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-              {errors.seats && <p className="text-red-500 text-xs mt-1">{errors.seats}</p>}
+            
+            <div className="pt-6 flex justify-end gap-3 border-t border-gray-50 dark:border-gray-700/50">
+                <Button type="button" onClick={onCancel} variant="light" className="!rounded-2xl px-8">
+                    Cancel
+                </Button>
+                <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting} className="!rounded-2xl px-8 shadow-brand-200">
+                    {internshipToEdit ? 'Save Changes' : 'Post Internship'}
+                </Button>
             </div>
-            <div>
-              <label htmlFor="stipend" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Stipend (e.g., ₹20,000 / month)</label>
-              <input type="text" id="stipend" name="stipend" value={formData.stipend} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white shadow-sm focus:border-brand-500 focus:ring-brand-500" />
-              {errors.stipend && <p className="text-red-500 text-xs mt-1">{errors.stipend}</p>}
-            </div>
-        </div>
-        <div className="pt-5 flex justify-end gap-3">
-            <Button type="button" onClick={onCancel} variant="light">
-                Cancel
-            </Button>
-            <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting}>
-                {internshipToEdit ? 'Save Changes' : 'Post Internship'}
-            </Button>
         </div>
       </form>
     </Card>
