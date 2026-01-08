@@ -49,6 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, isCollapsed, onToggle }) =>
     const studentNav = [
         { name: 'Dashboard', path: '/student/dashboard', icon: ChartPieIcon },
         { name: 'My Profile', path: '/student/profile', icon: UserGroupIcon },
+        { name: 'My Applications', path: '/student/applications', icon: BriefcaseIcon },
         { name: 'Upskilling Hub', path: '/student/upskilling', icon: AcademicCapIcon },
         { name: 'AI Mentor', path: '/student/mentor', icon: LightBulbIcon },
         { name: 'Simulator', path: '/student/simulator', icon: BeakerIcon },
@@ -90,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, isCollapsed, onToggle }) =>
                         </div>
                         {!isCollapsed && (
                             <div className="flex flex-col">
-                                <span className="text-lg font-display font-extrabold text-gray-900 dark:text-white tracking-tight italic">Intern <span className="text-brand-600">AI</span></span>
+                                <span className="text-lg font-display font-extrabold text-gray-900 dark:text-white tracking-tight italic">SkillSync <span className="text-brand-600">AI</span></span>
                                 <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Smart Gateway</span>
                             </div>
                         )}
@@ -142,7 +143,7 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, isCollapsed, onToggle }) =>
                                     <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">System Online</span>
                                 </div>
                                 <p className="text-[10px] text-gray-400 leading-relaxed">
-                                    PM Internship Scheme AI Allocator v2.0
+                                    SkillSync AI Allocator v2.0
                                 </p>
                             </>
                         )}

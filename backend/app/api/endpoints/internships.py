@@ -34,3 +34,23 @@ async def apply_internship(id: int, student_id: int = Body(..., embed=True)):
         await internship.save()
         
     return {"message": "Application successful", "internship_id": id}
+
+@router.post("/{id}/withdraw")
+async def withdraw_application(id: int, student_id: int = Body(..., embed=True)):
+    internship = await Internship.find_one(Internship.id == id)
+    if not internship:
+        raise HTTPException(status_code=404, detail="Internship not found")
+    
+    if student_id in internship.applicants:
+        internship.applicants.remove(student_id)
+        await internship.save()
+        return {"message": "Withdrawal successful", "internship_id": id}
+    
+    raise HTTPException(status_code=400, detail="Student has not applied to this internship")
+
+@router.get("/applied/{student_id}", response_model=List[InternshipResponse])
+async def get_student_applications(student_id: int):
+    # Find all internships where student_id is in applicants list
+    # Beanie (MongoDB) query for array contains
+    internships = await Internship.find({"applicants": student_id}).to_list()
+    return internships

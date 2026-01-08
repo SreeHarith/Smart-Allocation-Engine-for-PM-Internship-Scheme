@@ -1,5 +1,5 @@
 {
-  "name": "PM Internship AI Allocator",
+  "name": "SkillSync AI Allocator",
   "description": "A smart, AI-based platform for transparent and fair allocation of internships. It matches students based on skills, preferences, and diversity criteria, while also providing upskilling and mentorship opportunities.",
   "requestFramePermissions": [
     "camera",

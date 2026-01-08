@@ -5,7 +5,7 @@ from app.models.schemas import Student, Internship
 from app.core.config import settings
 
 # Mock Data from constants.ts
-STUDENTS_DATA = [
+STUDENTS_DATA = [{
     "id": 1,
     "name": 'DHARSHAN P',
     "email": 'dharshan@example.com',

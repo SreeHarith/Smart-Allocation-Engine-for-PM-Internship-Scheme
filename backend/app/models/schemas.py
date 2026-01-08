@@ -76,7 +76,6 @@ class StudentResponse(BaseModel):
     class Config:
         populate_by_name = True
         from_attributes = True # Support Pydantic V2
-        orm_mode = True # Support Pydantic V1 fallback
 
 class CompanyResponse(BaseModel):
     id: int
@@ -91,7 +90,6 @@ class CompanyResponse(BaseModel):
     class Config:
         populate_by_name = True
         from_attributes = True
-        orm_mode = True
 
 class InternshipResponse(BaseModel):
     id: int
@@ -111,7 +109,6 @@ class InternshipResponse(BaseModel):
     class Config:
         populate_by_name = True
         from_attributes = True
-        orm_mode = True
 
 class Admin(Document):
     id: int
@@ -132,4 +129,3 @@ class AdminResponse(BaseModel):
     class Config:
         populate_by_name = True
         from_attributes = True
-        orm_mode = True

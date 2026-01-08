@@ -28,10 +28,25 @@ export const api = {
     if (!response.ok) throw new Error('Failed to apply to internship');
   },
 
+  async withdrawFromInternship(internshipId: number, studentId: number): Promise<void> {
+    const response = await fetch(`${API_URL}/internships/${internshipId}/withdraw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: studentId }),
+    });
+    if (!response.ok) throw new Error('Failed to withdraw from internship');
+  },
+
+  async getAppliedInternships(studentId: number): Promise<Internship[]> {
+    const response = await fetch(`${API_URL}/internships/applied/${studentId}`);
+    if (!response.ok) throw new Error('Failed to fetch applied internships');
+    return response.json();
+  },
+
   async getStudents(): Promise<Student[]> {
     const response = await fetch(`${API_URL}/students`);
     if (!response.ok) {
-        throw new Error("Failed to fetch students");
+      throw new Error("Failed to fetch students");
     }
     return response.json();
   },
@@ -43,8 +58,8 @@ export const api = {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Registration failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Registration failed');
     }
     return response.json();
   },
@@ -56,8 +71,8 @@ export const api = {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Login failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Login failed');
     }
     return response.json();
   },
@@ -69,21 +84,21 @@ export const api = {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Login failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Login failed');
     }
     return response.json();
   },
 
-    async registerCompany(data: any): Promise<any> {
+  async registerCompany(data: any): Promise<any> {
     const response = await fetch(`${API_URL}/auth/company/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Registration failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Registration failed');
     }
     return response.json();
   },
@@ -95,8 +110,8 @@ export const api = {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Login failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Login failed');
     }
     return response.json();
   },
@@ -108,37 +123,37 @@ export const api = {
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || 'Registration failed');
+      const err = await response.json();
+      throw new Error(err.detail || 'Registration failed');
     }
     return response.json();
   },
 
   async updateStudent(studentId: number, data: any): Promise<Student> {
-      const response = await fetch(`${API_URL}/students/${studentId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-          throw new Error('Failed to update profile');
-      }
-      return response.json();
+    const response = await fetch(`${API_URL}/students/${studentId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to update profile');
+    }
+    return response.json();
   },
 
   async chatWithMentor(message: string, history: any[], studentId: number): Promise<string> {
     const formattedHistory = history.map((msg: any) => ({
-        role: msg.sender === 'user' ? 'user' : 'assistant',
-        content: msg.text
+      role: msg.sender === 'user' ? 'user' : 'assistant',
+      content: msg.text
     }));
 
     const response = await fetch(`${API_URL}/ai/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, history: formattedHistory, studentId }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, history: formattedHistory, studentId }),
     });
     if (!response.ok) {
-        throw new Error('Failed to get response');
+      throw new Error('Failed to get response');
     }
     const data = await response.json();
     return data.response;
@@ -146,9 +161,9 @@ export const api = {
 
   async getRecommendations(student: Student): Promise<any[]> {
     const response = await fetch(`${API_URL}/matching/recommendations`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(student),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(student),
     });
     if (!response.ok) throw new Error('Failed to fetch recommendations');
     return response.json();
@@ -156,9 +171,9 @@ export const api = {
 
   async getMatchScore(student: Student, internshipId: number): Promise<number> {
     const response = await fetch(`${API_URL}/matching/score/${internshipId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(student),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(student),
     });
     if (!response.ok) throw new Error('Failed to calculate score');
     const data = await response.json();

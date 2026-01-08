@@ -58,7 +58,9 @@ class TFIDFMatchingEngine:
             skill_sim = self._calculate_skill_overlap(student.skills, internship.requiredSkills)
             
             return self._hybrid_score(vector_sim, skill_sim)
-        except:
+        except Exception:
+            import traceback
+            traceback.print_exc()
             # Fallback if vectorizer yields 0 features (empty text) or other error
             skill_sim = self._calculate_skill_overlap(student.skills, internship.requiredSkills)
             return round(skill_sim * 100, 2)

@@ -29,7 +29,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
                 <GovIcon className="h-6 w-6 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-display font-extrabold text-gray-900 dark:text-white tracking-tight italic">PM Internship <span className="text-brand-600">AI</span></span>
+                <span className="text-xl font-display font-extrabold text-gray-900 dark:text-white tracking-tight italic">SkillSync <span className="text-brand-600">AI</span></span>
                 <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Govt of India Initiative</span>
               </div>
             </div>
@@ -77,7 +77,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
                 <div className="bg-white dark:bg-gray-800 p-4 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-700 max-w-md">
                   <img
                     src="/hero-image.png"
-                    alt="PM Internship Opportunity"
+                    alt="SkillSync Opportunity"
                     className="rounded-[2rem] w-full aspect-[4/5] object-cover"
                   />
                   <div className="absolute -bottom-6 -right-6 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl border border-gray-50 flex items-center space-x-4">
@@ -117,7 +117,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
         <section className="pb-24 lg:pb-32 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-[3rem] p-8 lg:p-16 relative overflow-hidden flex flex-col lg:flex-row items-center gap-16 border border-slate-100 shadow-2xl shadow-slate-200/50">
-              
+
               <div className="lg:w-1/2 relative z-10 text-center lg:text-left">
                 <div className="inline-block px-4 py-1.5 bg-brand-50 rounded-full text-xs font-bold uppercase tracking-widest mb-6 text-brand-600">
                   Why join us?
@@ -126,7 +126,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
                   More than just an <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">internship</span>.
                 </h2>
                 <p className="text-lg text-slate-600 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
-                   Launch your career with financial independence and real-world skills. We've got your back every step of the way.
+                  Launch your career with financial independence and real-world skills. We've got your back every step of the way.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-left">
@@ -152,7 +152,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
                 <div className="relative animate-float-slow w-full max-w-lg">
                   {/* Abstract blob background */}
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-brand-100 to-accent-100 rounded-full blur-3xl -z-10 opacity-60" />
-                  
+
                   <div className="bg-white/80 backdrop-blur-xl border border-white rounded-[2.5rem] p-8 lg:p-10 shadow-xl relative">
                     <h3 className="text-2xl font-bold text-slate-900 mb-8">Your Growth Journey</h3>
                     <div className="space-y-8">
@@ -174,13 +174,13 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
                     </div>
 
                     <div className="mt-10 bg-brand-600 p-5 rounded-2xl shadow-lg shadow-brand-200 flex items-center space-x-4 transform translate-x-4 translate-y-4">
-                        <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center text-white">
-                          <CheckCircleIcon className="w-6 h-6" />
-                        </div>
-                        <div>
-                          <div className="text-base font-bold text-white">Govt. Recognized</div>
-                          <div className="text-xs text-brand-100 opacity-90">Certificate of Experience</div>
-                        </div>
+                      <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center text-white">
+                        <CheckCircleIcon className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <div className="text-base font-bold text-white">Govt. Recognized</div>
+                        <div className="text-xs text-brand-100 opacity-90">Certificate of Experience</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ const HomePage: React.FC<HomePageProps> = ({ onLogin }) => {
               <GovIcon className="h-8 w-8" />
               <span className="font-display font-bold text-gray-900 dark:text-white">Ministry of Corporate Affairs</span>
             </div>
-            <p className="text-sm text-gray-500">© 2026 PM Internship AI Scheme. All rights reserved.</p>
+            <p className="text-sm text-gray-500">© 2026 SkillSync AI Scheme. All rights reserved.</p>
             <div className="flex space-x-6 text-sm text-gray-400">
               <a href="#" className="hover:text-brand-600">Privacy Policy</a>
               <a href="#" className="hover:text-brand-600">Terms of Service</a>

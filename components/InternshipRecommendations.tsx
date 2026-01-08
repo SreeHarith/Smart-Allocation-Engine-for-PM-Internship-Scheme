@@ -26,12 +26,25 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   React.useEffect(() => {
     const fetchMatches = async () => {
       setLoading(true);
-      const matches = await getTopMatches(student, 6, dislikedIds);
-      setTopMatches(matches);
+      const matches = await getTopMatches(student, 50, dislikedIds); // Fetch more initially since we will filter
+
+      // Filter out internships where the student has already applied
+      const notAppliedMatches = matches.filter(internship => {
+        const applicants = (internship.applicants || []).map(String);
+        return !applicants.includes(String(student.id)); // Ensure string comparison for safety
+      });
+
+      // Slice to desired number after filtering
+      setTopMatches(notAppliedMatches.slice(0, 6));
       setLoading(false);
     };
     fetchMatches();
   }, [student, dislikedIds, refreshKey]);
+
+  // Sync applied state from newly applied actions in this session
+  // (We don't need to sync from topMatches anymore since we hide them, 
+  // but we keep appliedIds for the session-based applied cards if we wanted to show them, 
+  // but user said "not in recommended list", so we just hide them.)
 
   const handleDislike = (internshipId: number) => {
     setDislikedIds(prev => [...prev, internshipId]);
@@ -40,9 +53,10 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
   const handleApply = async (internshipId: number, internshipTitle: string) => {
     try {
       await api.applyToInternship(internshipId, student.id);
-      setAppliedIds(prev => [...prev, internshipId]);
+      // Remove from the list immediately as it's now an "applied" internship
+      setTopMatches(prev => prev.filter(i => i.id !== internshipId));
       addNotification({
-        message: `Successfully applied for the "${internshipTitle}" internship!`,
+        message: `Successfully applied for "${internshipTitle}"! You can track it in 'My Applications'.`,
         type: 'success',
       });
     } catch (error) {

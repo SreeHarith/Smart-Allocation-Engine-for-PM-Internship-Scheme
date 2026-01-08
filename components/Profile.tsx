@@ -6,18 +6,18 @@ import CustomSelect from './common/CustomSelect';
 import { PencilIcon, XMarkIcon } from './common/Icons';
 
 const SKILL_OPTIONS = [
-  'React', 'Node.js', 'Python', 'SQL', 'Data Analysis', 'Machine Learning', 
-  'Product Management', 'Market Research', 'Agile Methodologies', 'Figma', 
-  'TypeScript', 'AWS', 'Docker', 'Kubernetes', 'Java', 'C++', 'Go', 'Rust'
+    'React', 'Node.js', 'Python', 'SQL', 'Data Analysis', 'Machine Learning',
+    'Product Management', 'Market Research', 'Agile Methodologies', 'Figma',
+    'TypeScript', 'AWS', 'Docker', 'Kubernetes', 'Java', 'C++', 'Go', 'Rust'
 ];
 
 const LOCATION_OPTIONS = [
-  'Bangalore', 'Mumbai', 'Delhi', 'Hyderabad', 'Pune', 'Chennai', 'Remote'
+    'Bangalore', 'Mumbai', 'Delhi', 'Hyderabad', 'Pune', 'Chennai', 'Remote'
 ];
 
 const INDUSTRY_OPTIONS = [
-  'Artificial Intelligence', 'Web Development', 'Data Science', 'FinTech', 
-  'EdTech', 'HealthTech', 'E-commerce', 'SaaS', 'Cybersecurity', 'Cloud Computing'
+    'Artificial Intelligence', 'Web Development', 'Data Science', 'FinTech',
+    'EdTech', 'HealthTech', 'E-commerce', 'SaaS', 'Cybersecurity', 'Cloud Computing'
 ];
 
 interface ProfileProps {
@@ -79,7 +79,7 @@ const Profile: React.FC<ProfileProps> = ({ student, onUpdateStudent, readOnly = 
     const handleMultiSelectChange = (e: React.ChangeEvent<HTMLSelectElement>, field: 'skills' | 'industryFocus') => {
         const value = e.target.value;
         if (value && !formData[field].includes(value)) {
-             setFormData(prev => ({ ...prev, [field]: [...prev[field], value] }));
+            setFormData(prev => ({ ...prev, [field]: [...prev[field], value] }));
         }
     };
 
@@ -108,8 +108,11 @@ const Profile: React.FC<ProfileProps> = ({ student, onUpdateStudent, readOnly = 
                         <div className="absolute -inset-1 bg-gradient-to-br from-brand-400 to-accent-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-300" />
                         <img
                             className="relative h-32 w-32 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-xl"
-                            src={student.profileImage}
+                            src={student.profileImage || `https://api.dicebear.com/9.x/avataaars/svg?seed=${student.name}`}
                             alt={student.name}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${student.name}`;
+                            }}
                         />
                     </div>
 
@@ -123,11 +126,11 @@ const Profile: React.FC<ProfileProps> = ({ student, onUpdateStudent, readOnly = 
                     </div>
 
                     {!readOnly && (
-                    <div className="flex-shrink-0">
-                        <Button onClick={handleEditToggle} variant={isEditing ? 'light' : 'primary'} className="!rounded-2xl px-8 shadow-brand-100">
-                            {isEditing ? 'Discard Changes' : <><PencilIcon className="h-4 w-4 mr-2" /><span>Edit Profile</span></>}
-                        </Button>
-                    </div>
+                        <div className="flex-shrink-0">
+                            <Button onClick={handleEditToggle} variant={isEditing ? 'light' : 'primary'} className="!rounded-2xl px-8 shadow-brand-100">
+                                {isEditing ? 'Discard Changes' : <><PencilIcon className="h-4 w-4 mr-2" /><span>Edit Profile</span></>}
+                            </Button>
+                        </div>
                     )}
                 </div>
             </div>
@@ -184,8 +187,8 @@ const Profile: React.FC<ProfileProps> = ({ student, onUpdateStudent, readOnly = 
                                 value=""
                                 onChange={(value) => {
                                     const val = value as string;
-                                    if(val && !formData.skills.includes(val)) {
-                                       setFormData(prev => ({ ...prev, skills: [...prev.skills, val] }));
+                                    if (val && !formData.skills.includes(val)) {
+                                        setFormData(prev => ({ ...prev, skills: [...prev.skills, val] }));
                                     }
                                 }}
                                 placeholder="Add a skill..."
@@ -203,18 +206,18 @@ const Profile: React.FC<ProfileProps> = ({ student, onUpdateStudent, readOnly = 
                         </div>
                         <div className="space-y-3">
                             <label htmlFor="industryFocus" className="block text-xs font-bold uppercase tracking-widest text-gray-400">Industry Focus Areas</label>
-                             <CustomSelect
+                            <CustomSelect
                                 options={INDUSTRY_OPTIONS.filter(i => !formData.industryFocus.includes(i))}
                                 value=""
                                 onChange={(value) => {
                                     const val = value as string;
-                                    if(val && !formData.industryFocus.includes(val)) {
-                                       setFormData(prev => ({ ...prev, industryFocus: [...prev.industryFocus, val] }));
+                                    if (val && !formData.industryFocus.includes(val)) {
+                                        setFormData(prev => ({ ...prev, industryFocus: [...prev.industryFocus, val] }));
                                     }
                                 }}
                                 placeholder="Add an industry..."
                             />
-                             <div className="flex flex-wrap gap-2 pt-2">
+                            <div className="flex flex-wrap gap-2 pt-2">
                                 {formData.industryFocus.map(industry => (
                                     <span key={industry} className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-accent-50 text-accent-700 dark:bg-accent-900/30 dark:text-accent-300 border border-accent-100 dark:border-accent-800">
                                         {industry}
