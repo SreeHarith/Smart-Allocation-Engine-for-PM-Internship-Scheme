@@ -7,3 +7,5 @@ python-dotenv
 pydantic-settings
 passlib[argon2]
 httpx
+scikit-learn
+numpy

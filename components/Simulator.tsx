@@ -35,14 +35,14 @@ const Simulator: React.FC<SimulatorProps> = ({ student, addNotification }) => {
       );
 
       if (relevantInternship) {
-        const initialScore = calculateMatchScore(student, relevantInternship);
+        const initialScore = await calculateMatchScore(student, relevantInternship);
 
         // Create a temporary student profile with the new skill
         const studentWithNewSkill: Student = {
           ...student,
           skills: [...student.skills, newSkill],
         };
-        const newScore = calculateMatchScore(
+        const newScore = await calculateMatchScore(
           studentWithNewSkill,
           relevantInternship
         );

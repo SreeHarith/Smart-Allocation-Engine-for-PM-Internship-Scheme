@@ -13,12 +13,28 @@ interface InternshipCardProps {
   onApply: (internshipId: number, internshipTitle: string) => void;
   onWithdraw: (internship: Internship) => void;
   isApplied: boolean;
+  score?: number; // Optional prop to pass pre-calculated score
 }
 
-const InternshipCard: React.FC<InternshipCardProps> = ({ internship, student, onDislike, onApply, onWithdraw, isApplied }) => {
-  const matchScore = calculateMatchScore(student, internship);
+const InternshipCard: React.FC<InternshipCardProps> = ({ internship, student, onDislike, onApply, onWithdraw, isApplied, score }) => {
+  const [matchScore, setMatchScore] = React.useState<number>(score || 0);
   const studentSkills = new Set(student.skills);
   const requiredSkills = internship.requiredSkills;
+
+  React.useEffect(() => {
+    // If score was passed as prop, use it. Otherwise calculate (fetch) it.
+    if (score !== undefined) {
+        setMatchScore(score);
+    } else {
+        // Fallback: This component might be used where we don't have the score pre-calculated
+        // But matchingService `calculateMatchScore` is now async.
+        const fetchScore = async () => {
+             const s = await calculateMatchScore(student, internship);
+             setMatchScore(s);
+        };
+        fetchScore();
+    }
+  }, [internship, student, score]);
 
   const SkillPill: React.FC<{ skill: string, hasSkill: boolean }> = ({ skill, hasSkill }) => (
     <div className={`flex items-center px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg border transition-colors ${hasSkill

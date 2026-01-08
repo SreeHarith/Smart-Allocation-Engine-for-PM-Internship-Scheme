@@ -28,12 +28,13 @@ async def start_db():
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     await init_beanie(database=client[settings.DATABASE_NAME], document_models=[Student, Internship, Company, Admin])
 
-from app.api.endpoints import students, internships, auth, ai
+from app.api.endpoints import students, internships, auth, ai, matching
 
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(students.router, prefix="/api/students", tags=["Students"])
 app.include_router(internships.router, prefix="/api/internships", tags=["Internships"])
 app.include_router(ai.router, prefix="/api/ai", tags=["AI Mentor"])
+app.include_router(matching.router, prefix="/api/matching", tags=["Matching"])
 
 
 @app.get("/")

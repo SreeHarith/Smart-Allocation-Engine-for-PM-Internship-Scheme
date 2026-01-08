@@ -142,5 +142,26 @@ export const api = {
     }
     const data = await response.json();
     return data.response;
+  },
+
+  async getRecommendations(student: Student): Promise<any[]> {
+    const response = await fetch(`${API_URL}/matching/recommendations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student),
+    });
+    if (!response.ok) throw new Error('Failed to fetch recommendations');
+    return response.json();
+  },
+
+  async getMatchScore(student: Student, internshipId: number): Promise<number> {
+    const response = await fetch(`${API_URL}/matching/score/${internshipId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student),
+    });
+    if (!response.ok) throw new Error('Failed to calculate score');
+    const data = await response.json();
+    return data.score;
   }
 };

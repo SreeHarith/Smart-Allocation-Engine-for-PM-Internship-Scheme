@@ -122,6 +122,7 @@ const InternshipRecommendations: React.FC<InternshipRecommendationsProps> = ({ s
               onApply={handleApply}
               onWithdraw={handleWithdraw}
               isApplied={appliedIds.includes(internship.id)}
+              score={(internship as any).score}
             />
           ))}
         </div>

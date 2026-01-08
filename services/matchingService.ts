@@ -1,112 +1,48 @@
 import { Student, Internship } from '../types';
 import { api } from './api';
-import { ALL_STUDENTS } from '../constants';
+
+// IMPORTANT: With the move to Vector Space Matching, this service now delegates to the backend API.
+// The frontend no longer calculates scores locally.
 
 /**
  * Calculates a match score between a student and an internship.
- * @param student - The student's profile.
- * @param internship - The internship details.
- * @returns A match score from 0 to 100.
+ * Now fetches the score from the backend TF-IDF engine.
  */
-export const calculateMatchScore = (student: Student, internship: Internship): number => {
-  // 1. Role/Goal Match (30% weight) - CRITICAL FACTOR
-  // Check if career goals or industry focus align with the internship title
-  const careerGoals = student.careerGoals || "";
-  const industryFocus = student.industryFocus || [];
-  const goalWords = (careerGoals + " " + industryFocus.join(" ")).toLowerCase().split(/\W+/);
-  const titleWords = internship.title.toLowerCase().split(/\W+/);
-  const sectorWords = internship.sector.toLowerCase().split(/\W+/);
-  
-  const importantKeywords = new Set([...titleWords, ...sectorWords]);
-  // Filter out common stop words if needed, but for now simple matching
-  const stopWords = new Set(['a', 'an', 'the', 'in', 'of', 'for', 'intern', 'internship', 'become', 'company']);
-  
-  let roleMatchCount = 0;
-  let meaningfulKeywords = 0;
-  
-  importantKeywords.forEach(word => {
-     if (!stopWords.has(word) && word.length > 2) {
-         meaningfulKeywords++;
-         if (goalWords.includes(word)) {
-             roleMatchCount++;
-         }
-     }
-  });
-  
-  // If there are meaningful keywords, calculate score. If not (unlikely), give a baseline.
-  // We cap the match at 100% of the 30 points.
-  const roleMatchScore = meaningfulKeywords > 0 
-      ? Math.min(30, (roleMatchCount / Math.max(1, meaningfulKeywords * 0.5)) * 30) // slightly lenient denominator
-      : 15;
-
-
-  // 2. Skill match (50% weight)
-  const skills = student.skills || [];
-  const studentSkills = new Set(skills.map(s => s.toLowerCase()));
-  const requiredSkills = new Set(internship.requiredSkills.map(s => s.toLowerCase()));
-  let matchedSkills = 0;
-  requiredSkills.forEach(skill => {
-    if (studentSkills.has(skill)) {
-      matchedSkills++;
-    }
-  });
-  const skillMatchScore = requiredSkills.size > 0 ? (matchedSkills / requiredSkills.size) * 50 : 50;
-
-  // 3. Logistics Balance (20% weight total)
-  let logisticsScore = 0;
-
-  // Location preference (5 points)
-  const locPref = student.locationPreference || "";
-  if (internship.location === 'Remote' || (locPref && locPref.includes(internship.location))) {
-    logisticsScore += 5;
+export const calculateMatchScore = async (student: Student, internship: Internship): Promise<number> => {
+  try {
+     return await api.getMatchScore(student, internship.id);
+  } catch (error) {
+    console.error("Error fetching match score:", error);
+    return 0;
   }
-
-  // Company size preference (5 points)
-  if (!student.preferredCompanySize || student.preferredCompanySize === 'Any' || student.preferredCompanySize === internship.companySize) {
-    logisticsScore += 5;
-  }
-
-  // Industry focus preference (5 points)
-  // (Redundant with Role Match but explicitly checks the metadata field)
-  if (industryFocus.length === 0 || industryFocus.includes(internship.sector)) {
-      logisticsScore += 5;
-  }
-
-  // Duration preference (5 points)
-  if (!student.preferredDuration || student.preferredDuration === 'Any' || student.preferredDuration === internship.duration) {
-      logisticsScore += 5;
-  }
-
-  let finalScore = Math.round(roleMatchScore + skillMatchScore + logisticsScore);
-  
-  // Penalize drastically if Role Match is 0 to avoid "accidental" high scores just from logistics
-  if (roleMatchScore === 0) {
-      finalScore = Math.round(finalScore * 0.6); // 40% penalty
-  }
-
-  // Ensure score is within 0-100 range
-  return Math.min(100, Math.max(0, finalScore));
 };
 
 /**
  * Gets the top N internship matches for a student.
- * @param student - The student's profile.
- * @param count - The number of top matches to return.
- * @param dislikedIds - An array of internship IDs to exclude.
- * @returns An array of top matched internships.
+ * Now fetches prioritized recommendations from the backend.
  */
 export const getTopMatches = async (student: Student, count: number, dislikedIds: number[] = []): Promise<Internship[]> => {
   try {
-    const internships = await api.getInternships();
-    return internships
-      .filter(internship => !dislikedIds.includes(internship.id)) // Filter out disliked internships
-      .map(internship => ({
-        internship,
-        score: calculateMatchScore(student, internship),
-      }))
-      .sort((a, b) => b.score - a.score)
+    const recommendations = await api.getRecommendations(student);
+    
+    // Recommendations come back as { internship: Internship, score: number }
+    // We filter, take top N, and return just the internship objects to maintain compatibility
+    // In a future refactor, we should pass the score through to the UI.
+    
+    return recommendations
+      .filter((item: any) => !dislikedIds.includes(item.internship.id))
       .slice(0, count)
-      .map(item => item.internship);
+      .map((item: any) => {
+         // Attach the score temporarily to the internship object if possible, or just return the internship
+         // For now, let's return the internship. 
+         // Note: The UI will need to re-fetch individual scores (inefficient) OR we update the UI to handle the {internship, score} object.
+         // Based on the plan, we will stick to the interface but we need to handle the score display.
+         
+         // HACK: We attach the score to the internship object for the UI to read if it checks.
+         // This assumes the UI casts it or ignores extra props.
+         return { ...item.internship, score: item.score }; 
+      });
+
   } catch (error) {
     console.error("Failed to fetch matches:", error);
     return [];
@@ -115,21 +51,35 @@ export const getTopMatches = async (student: Student, count: number, dislikedIds
 
 /**
  * Gets the top N applicants for an internship.
- * @param internship - The internship to find applicants for.
- * @param count - The number of top applicants to return.
- * @returns An array of top matched students with their scores.
+ * (This logic might still be client-side filtered for now or need a new endpoint)
+ * For now, we leave this as a basic implementation or move to backend if needed.
+ * Given the user request focused on "matching", we'll keep this simple or todo.
  */
 export const getTopApplicants = async (internship: Internship, count: number): Promise<{ student: Student, score: number }[]> => {
+    // This functionality should ideally also move to backend.
+    // For now, we will perform a quick implementation that iterates all students and calls the score API?
+    // NO, that would be N+1 API calls. 
+    // Let's rely on the simulation/demo data or existing logic but routed via backend?
+    // Actually, for this specific demo, let's just fetch all students and sort by a simplified local check OR 
+    // simply return empty/mock if not critical. 
+    // BUT the best approach is to query the backend. Let's create a client-side loop for now as a fallback
+    // since we didn't add a /applicants endpoint.
+    
     try {
         const allStudents = await api.getStudents();
         const applicantIds = new Set(internship.applicants || []);
         
-        return allStudents
-            .filter(student => applicantIds.has(student.id))
-            .map(student => ({
-                student,
-                score: calculateMatchScore(student, internship),
-            }))
+        // This is slow (N calls), but accurate to the new model
+        const scoredStudents = await Promise.all(
+            allStudents
+                .filter(student => applicantIds.has(student.id))
+                .map(async student => ({
+                    student,
+                    score: await calculateMatchScore(student, internship)
+                }))
+        );
+
+        return scoredStudents
             .sort((a, b) => b.score - a.score)
             .slice(0, count);
     } catch (error) {
